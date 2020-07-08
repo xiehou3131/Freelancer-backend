@@ -20,7 +20,7 @@ public class ProposeWork {
     @Id
     private int wId;
 
-    private Double payment;
+    private Double expectPayment;
     private String remark;
 
 }

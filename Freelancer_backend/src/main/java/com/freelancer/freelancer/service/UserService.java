@@ -6,4 +6,11 @@ import java.util.List;
 
 
 public interface UserService {
+
+    User checkUser(String name, String password);
+
+    User checkDuplicate(String name);
+
+    void addUser(User newUser);
+
 }
