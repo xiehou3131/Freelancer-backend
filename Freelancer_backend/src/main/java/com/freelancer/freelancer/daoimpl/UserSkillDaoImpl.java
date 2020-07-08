@@ -14,6 +14,8 @@ public class UserSkillDaoImpl implements UserSkillDao {
     UserSkillRepository userSkillRepository;
 
     @Override
-    public void addUserSkill(UserSkill newUserSkill) { userSkillRepository.save(newUserSkill); }
+    public void addUserSkill(UserSkill newUserSkill) {
+        System.out.println("daoimpl test");
+        userSkillRepository.save(newUserSkill); }
 
 }

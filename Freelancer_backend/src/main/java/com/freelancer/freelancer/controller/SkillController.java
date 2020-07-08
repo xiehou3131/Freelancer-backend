@@ -2,6 +2,7 @@ package com.freelancer.freelancer.controller;
 
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.UserSkill;
+import com.freelancer.freelancer.entity.UserSkillPK;
 import com.freelancer.freelancer.service.UserSkillService;
 import com.freelancer.freelancer.entity.Skill;
 import com.freelancer.freelancer.service.SkillService;
@@ -32,7 +33,8 @@ public class SkillController {
     UserSkillService userSkillService;
 
     @RequestMapping("/addSkill")
-    public void addSkill(@RequestParam("skillName") String skillName) {
+    public void addSkill(@RequestBody Map<String, String> params) {
+        String skillName = params.get("skillName");
         Skill duplicate = skillService.checkDuplicate(skillName);
 
         if (duplicate == null) {
@@ -45,14 +47,18 @@ public class SkillController {
     }
 
     @RequestMapping("/userAddSkills")
-    public void userAddSkills(@RequestParam("uId") int uId, @RequestParam("skills") int[] skills) {
-        int length = skills.length;
-        for (int i = 0;i < length;i++) {
-            UserSkill newUserSkill = new UserSkill();
-            newUserSkill.setUId(uId);
-            newUserSkill.setSId(skills[i]);
-            userSkillService.addUserSkill(newUserSkill);
-        }
+    public void userAddSkills(@RequestBody Map<String, String> params) {
+        UserSkill newUserSkill = new UserSkill();
+        UserSkillPK newPK = new UserSkillPK();
+
+        newPK.setuId(Integer.parseInt(params.get("uId")));
+        newPK.setsId(Integer.parseInt(params.get("sId")));
+
+        newUserSkill.setUserSkillPk(newPK);
+        System.out.println(newUserSkill.getUserSkillPk().getuId());
+        System.out.println(newUserSkill.getUserSkillPk().getsId());
+        userSkillService.addUserSkill(newUserSkill);
+        System.out.println("test");
     }
 
 }

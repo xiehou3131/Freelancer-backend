@@ -3,12 +3,23 @@ package com.freelancer.freelancer.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Objects;
 
-@Data
+@Embeddable
 public class UserSkillPK implements Serializable {
     private Integer uId;
     private Integer sId;
+
+    @Column(name = "u_id")
+    public Integer getuId() { return uId; }
+
+    public void setuId(Integer uId) { this.uId = uId; }
+
+    @Column(name = "s_id")
+    public Integer getsId() { return sId; }
+
+    public void setsId(Integer sId) { this.sId = sId; }
 
     @Override
     public boolean equals(Object o) {

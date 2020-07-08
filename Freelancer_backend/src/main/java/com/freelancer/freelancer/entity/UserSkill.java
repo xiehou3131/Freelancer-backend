@@ -9,15 +9,15 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@IdClass(UserSkillPK.class)
 @Table(name = "userSkill")
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
 public class UserSkill {
 
-    @Id
-    private int uId;
+    private UserSkillPK userSkillPK;
 
-    @Id
-    private int sId;
+    @EmbeddedId
+    public UserSkillPK getUserSkillPk() { return this.userSkillPK; }
+
+    public void setUserSkillPk(UserSkillPK userSkillPk) { this.userSkillPK = userSkillPk; }
 
 }

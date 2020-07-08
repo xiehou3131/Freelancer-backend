@@ -13,6 +13,6 @@ public class UserSkillServiceImpl implements UserSkillService {
     private UserSkillDao userSkillDao;
 
     @Override
-    public void addUserSkill(UserSkill newUserSkill) { userSkillDao.addUserSkill(newUserSkill); }
+    public void addUserSkill(UserSkill newUserSkill) { System.out.println("simptest"); userSkillDao.addUserSkill(newUserSkill); }
 
 }
