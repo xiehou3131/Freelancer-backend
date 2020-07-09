@@ -3,10 +3,12 @@ package com.freelancer.freelancer.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Data
 public class UserSkillPK implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Integer uId;
     private Integer sId;
 

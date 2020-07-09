@@ -1,3 +1,5 @@
+package com.freelancer.freelancer.serviceimpl;
+
 import com.freelancer.freelancer.dao.UserSkillDao;
 import com.freelancer.freelancer.entity.UserSkill;
 import com.freelancer.freelancer.service.UserSkillService;
