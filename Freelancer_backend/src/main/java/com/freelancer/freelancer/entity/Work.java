@@ -18,6 +18,7 @@ public class Work {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int wId;
+    private int uId;
     private String title;
     private Double paymentLower;
     private Double paymentHigher;
@@ -26,4 +27,27 @@ public class Work {
     private String description;
     private int status;
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPaymentLower(Double paymentLower) {
+        this.paymentLower = paymentLower;
+    }
+
+    public void setPaymentHigher(Double paymentHigher) {
+        this.paymentHigher = paymentHigher;
+    }
+
+    public void setuId(int uId) {
+        this.uId = uId;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
