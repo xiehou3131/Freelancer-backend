@@ -17,9 +17,11 @@ import javax.persistence.*;
 public class DoWork {
 
     @Id
+    @JoinColumn(name="u_id")
     private int uId;
 
     @Id
+    @JoinColumn(name="w_id")
     private int wId;
 
     private Timestamp startTime;

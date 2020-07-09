@@ -11,6 +11,9 @@ import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,14 +36,47 @@ public class WorkController {
         Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
         String description = params.get("description");
 
-        Work work = workService.findByTitle(name);
-        if(work == null){
-            work = new Work();
-            work.setTitle(name);
-            work.setPaymentLower(paymentLower);
-            work.setPaymentHigher(paymentHigher);
-            work.setDescription(description);
-            workService.save(work);
-        }
+//        Work work = workService.findByTitle(name);
+//        if(work == null){
+        Work work = new Work();
+        work.setTitle(name);
+        work.setPaymentLower(paymentLower);
+        work.setPaymentHigher(paymentHigher);
+        work.setDescription(description);
+        workService.save(work);
+    }
+
+    @RequestMapping("/getWorks")
+    public List<Work> getWorks(@RequestBody Map<String, Integer> params) {
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+
+        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "wId"));
+
+        return workService.getWorks(pageable).getContent();
+    }
+
+    @RequestMapping("/getPostedWorks")
+    public List<Work> getPostedWorks(@RequestBody Map<String, Integer> params) {
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
+        Integer uId = params.get("u_id");
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+
+        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "wId"));
+
+        return workService.getPostedWorks(uId, pageable).getContent();
+    }
+
+    @RequestMapping("/getFinishedWorks")
+    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
+        Integer uId = params.get("u_id");
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+
+        Integer status = 1;
+        return workService.getWorkerWorks(uId, status);
     }
 }
