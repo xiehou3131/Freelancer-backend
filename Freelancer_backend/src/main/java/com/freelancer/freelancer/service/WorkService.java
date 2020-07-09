@@ -6,4 +6,6 @@ import java.util.List;
 
 
 public interface WorkService {
+    public Work findByTitle(String title);
+    public void save(Work work);
 }
