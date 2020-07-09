@@ -24,12 +24,23 @@ import java.util.Map;
 
 @RestController
 public class WorkController {
-    @RequestMapping("/postProject")
+    @Autowired
+    private WorkService workService;
+    @RequestMapping("/postWork")
     public void addProject(@RequestBody Map<String, String> params) {
         String name = params.get("title");
         Double paymentLower = Double.parseDouble(params.get("paymentLower"));
         Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
         String description = params.get("description");
 
+        Work work = workService.findByTitle(name);
+        if(work == null){
+            work = new Work();
+            work.setTitle(name);
+            work.setPaymentLower(paymentLower);
+            work.setPaymentHigher(paymentHigher);
+            work.setDescription(description);
+            workService.save(work);
+        }
     }
 }
