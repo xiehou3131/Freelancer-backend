@@ -1,3 +1,5 @@
+package com.freelancer.freelancer.daoimpl;
+
 import com.freelancer.freelancer.dao.UserSkillDao;
 import com.freelancer.freelancer.entity.UserSkill;
 import com.freelancer.freelancer.repository.UserSkillRepository;
@@ -14,8 +16,5 @@ public class UserSkillDaoImpl implements UserSkillDao {
     UserSkillRepository userSkillRepository;
 
     @Override
-    public void addUserSkill(UserSkill newUserSkill) {
-        System.out.println("daoimpl test");
-        userSkillRepository.save(newUserSkill); }
-
+    public void addUserSkill(UserSkill newUserSkill) { userSkillRepository.save(newUserSkill); }
 }

@@ -6,18 +6,23 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "userSkill")
+@IdClass(UserSkillPK.class)
 @JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-public class UserSkill {
+public class UserSkill implements Serializable {
 
-    private UserSkillPK userSkillPK;
+    private static final long serialVersionUID = 1L;
 
-    @EmbeddedId
-    public UserSkillPK getUserSkillPk() { return this.userSkillPK; }
+    @Id
+    @JoinColumn(name="u_id")
+    private Integer uId;
 
-    public void setUserSkillPk(UserSkillPK userSkillPk) { this.userSkillPK = userSkillPk; }
+    @Id
+    @JoinColumn(name="s_id")
+    private Integer sId;
 
 }

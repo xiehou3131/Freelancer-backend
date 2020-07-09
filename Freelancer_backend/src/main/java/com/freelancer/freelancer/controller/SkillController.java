@@ -49,16 +49,12 @@ public class SkillController {
     @RequestMapping("/userAddSkills")
     public void userAddSkills(@RequestBody Map<String, String> params) {
         UserSkill newUserSkill = new UserSkill();
-        UserSkillPK newPK = new UserSkillPK();
+//        System.out.println(Integer.parseInt(params.get("u_id")));
+//        System.out.println(Integer.parseInt(params.get("s_id")));
+        newUserSkill.setUId(1);
+        newUserSkill.setSId(1);
 
-        newPK.setuId(Integer.parseInt(params.get("uId")));
-        newPK.setsId(Integer.parseInt(params.get("sId")));
-
-        newUserSkill.setUserSkillPk(newPK);
-        System.out.println(newUserSkill.getUserSkillPk().getuId());
-        System.out.println(newUserSkill.getUserSkillPk().getsId());
         userSkillService.addUserSkill(newUserSkill);
-        System.out.println("test");
     }
 
 }

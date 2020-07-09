@@ -1,3 +1,5 @@
+package com.freelancer.freelancer.serviceimpl;
+
 import com.freelancer.freelancer.dao.UserSkillDao;
 import com.freelancer.freelancer.entity.UserSkill;
 import com.freelancer.freelancer.service.UserSkillService;
@@ -13,6 +15,6 @@ public class UserSkillServiceImpl implements UserSkillService {
     private UserSkillDao userSkillDao;
 
     @Override
-    public void addUserSkill(UserSkill newUserSkill) { System.out.println("simptest"); userSkillDao.addUserSkill(newUserSkill); }
+    public void addUserSkill(UserSkill newUserSkill) { userSkillDao.addUserSkill(newUserSkill); }
 
 }
