@@ -69,14 +69,14 @@ public class WorkController {
         return workService.getPostedWorks(uId, pageable).getContent();
     }
 
-    @RequestMapping("/getFinishedWorks")
-    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
-        Integer PageNum = params.get("pagenum");
-        Integer PageContentNum = params.get("size");
-        Integer uId = params.get("u_id");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
-
-        Integer status = 1;
-        return workService.getWorkerWorks(uId, status);
-    }
+//    @RequestMapping("/getFinishedWorks")
+//    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
+//        Integer PageNum = params.get("pagenum");
+//        Integer PageContentNum = params.get("size");
+//        Integer uId = params.get("u_id");
+//        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+//
+//        Integer status = 1;
+//        return workService.getWorkerWorks(uId);
+//    }
 }

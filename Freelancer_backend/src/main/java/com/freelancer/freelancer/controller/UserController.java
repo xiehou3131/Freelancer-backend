@@ -7,6 +7,8 @@ import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
 import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,14 @@ import java.util.Map;
 
 
 @RestController
-public class LoginController {
+@Api("userController相关api")
+public class UserController {
 
 
     @Autowired
     private UserService userService;
 
+    @ApiOperation("login")
     @RequestMapping("/login")
     //public Msg login(@RequestParam(Constant.USERNAME) String username, @RequestParam(Constant.PASSWORD) String password, @RequestParam(Constant.REMEMBER_ME) Boolean remember){
     public Msg login(@RequestBody Map<String, String> params){
