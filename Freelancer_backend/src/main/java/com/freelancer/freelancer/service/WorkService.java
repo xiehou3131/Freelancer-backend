@@ -15,4 +15,6 @@ public interface WorkService {
     Page<Work> getWorks(Pageable pageable);
 
     Page<Work> getPostedWorks(Integer uId, Pageable pageable);
+
+    List<Work> getWorkerWorks(Integer uId);
 }

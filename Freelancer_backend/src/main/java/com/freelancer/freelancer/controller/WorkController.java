@@ -13,6 +13,7 @@ import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,12 +49,12 @@ public class WorkController {
 
     @RequestMapping("/getWorks")
     public List<Work> getWorks(@RequestBody Map<String, Integer> params) {
+        System.out.println("test");
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "wId"));
-
+        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
         return workService.getWorks(pageable).getContent();
     }
 
@@ -64,19 +65,19 @@ public class WorkController {
         Integer uId = params.get("u_id");
         if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "wId"));
+        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
         return workService.getPostedWorks(uId, pageable).getContent();
     }
 
-//    @RequestMapping("/getFinishedWorks")
-//    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
+    @RequestMapping("/getFinishedWorks")
+    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
 //        Integer PageNum = params.get("pagenum");
 //        Integer PageContentNum = params.get("size");
-//        Integer uId = params.get("u_id");
+        Integer uId = params.get("u_id");
 //        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
-//
-//        Integer status = 1;
-//        return workService.getWorkerWorks(uId);
-//    }
+
+        Integer status = 1;
+        return workService.getWorkerWorks(uId);
+    }
 }

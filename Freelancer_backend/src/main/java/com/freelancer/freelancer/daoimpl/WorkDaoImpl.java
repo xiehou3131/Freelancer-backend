@@ -41,4 +41,7 @@ public class WorkDaoImpl implements WorkDao {
         Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
         return postedWorks;
     }
+
+    @Override
+    public List<Work> getWorkerWorks(Integer uId) { return workRepository.findByUId(uId); }
 }

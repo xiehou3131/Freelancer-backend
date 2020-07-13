@@ -26,8 +26,13 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public Page<Work> getWorks(Pageable pageable) { return workDao.getWorks(pageable); }
+    public Page<Work> getWorks(Pageable pageable) {
+        System.out.println("Service");
+        return workDao.getWorks(pageable); }
 
     @Override
     public Page<Work> getPostedWorks(Integer uId, Pageable pageable) { return workDao.getPostedWorks(uId, pageable); }
+
+    @Override
+    public List<Work> getWorkerWorks(Integer uId) { return workDao.getWorkerWorks(uId); }
 }
