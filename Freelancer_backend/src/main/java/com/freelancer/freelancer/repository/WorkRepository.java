@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface WorkRepository extends JpaRepository<Work,Integer> {
     @Query("select w from Work w")
     Page<Work> getWorks(Pageable pageable);
 
-    @Query("select w from Work w where w.uId = ?1")
+    @Query("select w from Work w where w.u_id = ?1")
     Page<Work> getPostedWorks(Integer uId, Pageable pageable);
+
+    @Query("select w from Work w where w.u_id=:uId")
+    List<Work> findByUId(@Param("uId")Integer uId);
 }
