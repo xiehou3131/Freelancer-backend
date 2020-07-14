@@ -24,5 +24,6 @@ public class User {
     private String trueName;
     private String creditCard;
     private int type;
+    private int isBanned;
 
 }

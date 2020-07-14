@@ -2,8 +2,10 @@ package com.freelancer.freelancer.controller;
 
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.User;
+import com.freelancer.freelancer.entity.DoWork;
 import com.freelancer.freelancer.entity.Work;
 import com.freelancer.freelancer.service.WorkService;
+import com.freelancer.freelancer.service.DoWorkService;
 import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
@@ -22,14 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 @RestController
 public class WorkController {
+
     @Autowired
     private WorkService workService;
+
+    @Autowired
+    private DoWorkService doWorkService;
+
     @RequestMapping("/postWork")
     public void addProject(@RequestBody Map<String, String> params) {
         String name = params.get("title");
@@ -72,12 +80,18 @@ public class WorkController {
 
     @RequestMapping("/getFinishedWorks")
     public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
-//        Integer PageNum = params.get("pagenum");
-//        Integer PageContentNum = params.get("size");
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-//        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
-        Integer status = 1;
-        return workService.getWorkerWorks(uId);
+        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+
+        List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
+        List<Work> workerWorks = new ArrayList<Work>();;
+        for (DoWork doWork : finishedWorks) {
+            workerWorks.add(workService.findByWId(doWork.getW_id()));
+        }
+        return workerWorks;
     }
 }

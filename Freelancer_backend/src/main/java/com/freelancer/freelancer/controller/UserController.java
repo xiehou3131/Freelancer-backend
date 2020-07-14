@@ -3,6 +3,8 @@ package com.freelancer.freelancer.controller;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.User;
 import com.freelancer.freelancer.service.UserService;
+import com.freelancer.freelancer.entity.Administrator;
+import com.freelancer.freelancer.service.AdministratorService;
 import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
@@ -30,6 +32,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AdministratorService administratorService;
+
     @ApiOperation("login")
     @RequestMapping("/login")
     //public Msg login(@RequestParam(Constant.USERNAME) String username, @RequestParam(Constant.PASSWORD) String password, @RequestParam(Constant.REMEMBER_ME) Boolean remember){
@@ -41,13 +46,19 @@ public class UserController {
         }
         User user = userService.checkUser(name, password);
         if(user != null){
-            JSONObject obj = new JSONObject();
-            obj.put(Constant.NAME, user.getName());
-            obj.put(Constant.USER_TYPE, user.getType());
-            SessionUtil.setSession(obj);
+            JSONObject data = new JSONObject();
+            data.put(Constant.NAME, user.getName());
+            data.put(Constant.USER_TYPE, user.getType());
+            SessionUtil.setSession(data);
 
-            JSONObject data = JSONObject.fromObject(user);
-            data.remove(Constant.PASSWORD);
+            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
+        }
+        Administrator administrator = administratorService.checkAdmin(name, password);
+        if(administrator != null) {
+            JSONObject data = new JSONObject();
+            data.put(Constant.NAME, administrator.getName());
+            data.put(Constant.USER_TYPE, 1);
+            SessionUtil.setSession(data);
 
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         }

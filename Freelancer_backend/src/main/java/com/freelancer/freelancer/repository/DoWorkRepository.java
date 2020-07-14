@@ -1,5 +1,7 @@
 package com.freelancer.freelancer.repository;
 
+import com.freelancer.freelancer.entity.DoWork;
+import com.freelancer.freelancer.entity.DoWorkPK;
 import com.freelancer.freelancer.entity.Work;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,13 +11,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface WorkRepository extends JpaRepository<Work,Integer> {
-    @Query("select w from Work w where w.title = ?1")
-    public Work findByTitle(String title);
+public interface DoWorkRepository extends JpaRepository<DoWork,DoWorkPK> {
 
-    @Query("select w from Work w")
-    Page<Work> getWorks(Pageable pageable);
+    @Query("select d from DoWork d where d.u_id = ?1")
+    Page<DoWork> getWorkerWorks(Integer uId, Pageable pageable);
 
-    @Query("select w from Work w where w.uId = ?1")
-    Page<Work> getPostedWorks(Integer uId, Pageable pageable);
 }

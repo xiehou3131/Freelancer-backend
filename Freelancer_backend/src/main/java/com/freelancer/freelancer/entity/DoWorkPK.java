@@ -7,19 +7,19 @@ import java.util.Objects;
 
 @Data
 public class DoWorkPK implements Serializable {
-    private Integer uId;
-    private Integer wId;
+    private Integer u_id;
+    private Integer w_id;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         DoWorkPK pk = (DoWorkPK) o;
-        return Objects.equals(uId, pk.uId) && Objects.equals(wId, pk.wId);
+        return Objects.equals(u_id, pk.u_id) && Objects.equals(w_id, pk.w_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uId, wId);
+        return Objects.hash(u_id, w_id);
     }
 }

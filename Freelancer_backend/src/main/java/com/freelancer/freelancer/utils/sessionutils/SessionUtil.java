@@ -20,7 +20,7 @@ public class SessionUtil {
             HttpSession session = request.getSession(false);
 
             if(session != null) {
-                Integer userType = (Integer) session.getAttribute(Constant.USER_TYPE);
+                Integer userType = (Integer) session.getAttribute("powerLevel");
                 return userType != null && userType >= 0;
             }
         }

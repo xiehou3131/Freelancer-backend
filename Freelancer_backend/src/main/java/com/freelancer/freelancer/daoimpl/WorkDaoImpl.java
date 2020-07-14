@@ -22,6 +22,9 @@ public class WorkDaoImpl implements WorkDao {
         return workRepository.findByTitle(title);
     }
 
+    @Override
+    public Work findByWId(Integer wId) { return workRepository.getOne(wId); }
+
     @Transactional
     @Override
     public void save(Work work) {
@@ -42,6 +45,4 @@ public class WorkDaoImpl implements WorkDao {
         return postedWorks;
     }
 
-    @Override
-    public List<Work> getWorkerWorks(Integer uId) { return workRepository.findByUId(uId); }
 }
