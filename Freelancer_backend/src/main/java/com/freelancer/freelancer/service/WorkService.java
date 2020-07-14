@@ -8,7 +8,9 @@ import java.util.List;
 
 
 public interface WorkService {
-    public Work findByTitle(String title);
+    Work findByTitle(String title);
+
+    Work findByWId(Integer wId);
 
     public void save(Work work);
 
@@ -16,5 +18,4 @@ public interface WorkService {
 
     Page<Work> getPostedWorks(Integer uId, Pageable pageable);
 
-    List<Work> getWorkerWorks(Integer uId);
 }

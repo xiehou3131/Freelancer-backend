@@ -18,11 +18,11 @@ public class DoWork {
 
     @Id
     @JoinColumn(name="u_id")
-    private int uId;
+    private int u_id;
 
     @Id
     @JoinColumn(name="w_id")
-    private int wId;
+    private int w_id;
 
     private Timestamp startTime;
     private Timestamp endTime;

@@ -18,7 +18,7 @@ public class Work {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int w_id;
-    private int u_id;
+    private int uId;
     private String title;
     private Double paymentLower;
     private Double paymentHigher;
