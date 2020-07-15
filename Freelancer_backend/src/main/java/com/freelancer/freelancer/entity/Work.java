@@ -26,4 +26,8 @@ public class Work {
     private Timestamp finishDdl;
     private String description;
     private int status;
+
+    public String getTitle() {
+        return title;
+    }
 }

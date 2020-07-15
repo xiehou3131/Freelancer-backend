@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,20 +40,39 @@ public class WorkController {
     @Autowired
     private DoWorkService doWorkService;
 
+    private Timestamp String2Date(String str){
+        try {
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate = dateFormat.parse(str);
+            Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+            return timestamp;
+        } catch(Exception e) { //this generic but you can control another types of exception
+            System.out.println("Error when convert string to date");
+            return null;
+        }
+    }
+
     @RequestMapping("/postWork")
     public void addProject(@RequestBody Map<String, String> params) {
+        System.out.println(params.get("title"));
         String name = params.get("title");
         Double paymentLower = Double.parseDouble(params.get("paymentLower"));
         Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
         String description = params.get("description");
+        Timestamp biddingDdl = String2Date(params.get("biddingDdl"));
+        Timestamp finishDdl = String2Date(params.get("finishDdl"));
+        Integer UId = Integer.parseInt(params.get("uId"));
 
-//        Work work = workService.findByTitle(name);
-//        if(work == null){
+
         Work work = new Work();
         work.setTitle(name);
+        work.setUId(UId);
         work.setPaymentLower(paymentLower);
         work.setPaymentHigher(paymentHigher);
         work.setDescription(description);
+        work.setBiddingDdl(biddingDdl);
+        work.setFinishDdl(finishDdl);
         workService.save(work);
     }
 

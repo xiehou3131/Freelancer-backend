@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface WorkRepository extends JpaRepository<Work,Integer> {
     @Query("select w from Work w where w.title = ?1")
-    public Work findByTitle(String title);
+    public List<Work> findByTitle(String title);
 
     @Query("select w from Work w")
     Page<Work> getWorks(Pageable pageable);

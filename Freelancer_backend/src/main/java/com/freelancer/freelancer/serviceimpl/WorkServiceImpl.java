@@ -16,7 +16,7 @@ public class WorkServiceImpl implements WorkService {
     private WorkDao workDao;
 
     @Override
-    public Work findByTitle(String title) {
+    public List<Work> findByTitle(String title) {
         return workDao.findByTitle(title);
     }
 
