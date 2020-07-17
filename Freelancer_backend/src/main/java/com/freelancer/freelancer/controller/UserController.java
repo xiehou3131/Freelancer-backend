@@ -91,9 +91,9 @@ public class UserController {
         newUser.setName(name);
         newUser.setPassword(password);
         newUser.setPhone(phone);
-        newUser.setEMail(email);
-        newUser.setTrueName(true_name);
-        newUser.setCreditCard(credit_card);
+        newUser.setE_mail(email);
+        newUser.setTrue_name(true_name);
+        newUser.setCredit_card(credit_card);
         newUser.setType(Integer.parseInt(type_s));
 
         User duplicate = userService.checkDuplicate(name);
@@ -127,5 +127,13 @@ public class UserController {
         else{
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
+    }
+
+    @RequestMapping("/getUserInfo")
+    public User getUserInfo(@RequestBody Map<String, String> params) {
+        String name = params.get("name");
+        User user = userService.findByName(name);
+        user.setPassword(null);
+        return user;
     }
 }

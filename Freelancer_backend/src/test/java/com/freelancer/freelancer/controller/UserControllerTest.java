@@ -8,6 +8,7 @@ import com.freelancer.freelancer.service.UserService;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
 import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 import org.junit.Before; 
@@ -16,10 +17,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockReset;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /** 
 * UserController Tester. 
@@ -66,12 +72,23 @@ public class UserControllerTest extends FreelancerApplicationTests {
     */
     @Test
     public void testLogin() throws Exception {
-//        JSONObject data = new JSONObject();
-//        data.put(Constant.NAME, user.getName());
-//        data.put(Constant.USER_TYPE, user.getType());
-//        SessionUtil.setSession(data);
-//
-//        return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
+        JSONObject obj = new JSONObject();
+        obj.put("name", "a2atech1");
+        obj.put("password", "123456");
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .post("/login")
+                .content(obj.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data").value("test"))
+                .andExpect(content().json("{status:0}"))
+                .andExpect(content().json("{data:{\"name\":\"a2atech1\",\"userType\":1}}"))
+                .andReturn();
+
+        String resultContent = result.getResponse().getContentAsString();
+        System.out.println(resultContent);
     }
 
     /**
@@ -102,6 +119,29 @@ public class UserControllerTest extends FreelancerApplicationTests {
     @Test
     public void testCheckSession() throws Exception {
     //TODO: Test goes here...
+    }
+
+    /**
+     *
+     * Method: getUserInfo(@RequestBody Map<String, String> params)
+     *
+     */
+    @Test
+    public void testGetUserInfo() throws Exception {
+        JSONObject obj = new JSONObject();
+        obj.put("name", "a2atech1");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/getUserInfo")
+                .content(obj.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.u_id").value(1))
+                .andExpect(jsonPath("$.phone").value("18201740079"))
+                .andExpect(jsonPath("$.e_mail").value("xxqhjw@sjtu.edu.cn"))
+                .andExpect(jsonPath("$.credit_card").value("111-222-333"))
+                .andReturn();
     }
 
 

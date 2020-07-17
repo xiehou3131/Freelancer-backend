@@ -15,4 +15,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query(value = "from User where name = :name")
     User checkDuplicate(@Param("name") String name);
 
+    @Query(value = "from User where name = :name")
+    User findByName(@Param("name") String name);
+
 }
