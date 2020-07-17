@@ -18,7 +18,7 @@ public class WorkDaoImpl implements WorkDao {
     @Autowired
     private WorkRepository workRepository;
     @Override
-    public Work findByTitle(String title) {
+    public List<Work> findByTitle(String title) {
         return workRepository.findByTitle(title);
     }
 
@@ -41,8 +41,8 @@ public class WorkDaoImpl implements WorkDao {
 
     @Override
     public Page<Work> getPostedWorks(Integer uId, Pageable pageable) {
-        Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
-        return postedWorks;
+            Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
+            return postedWorks;
     }
 
 }

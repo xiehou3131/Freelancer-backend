@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface WorkDao {
-    Work findByTitle(String title);
+    List<Work> findByTitle(String title);
 
     Work findByWId(Integer wId);
 
-    public void save(Work work);
+    void save(Work work);
 
     Page<Work> getWorks(Pageable pageable);
 

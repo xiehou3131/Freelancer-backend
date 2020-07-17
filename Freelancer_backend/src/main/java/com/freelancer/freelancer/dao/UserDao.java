@@ -1,7 +1,8 @@
 package com.freelancer.freelancer.dao;
 
 import com.freelancer.freelancer.entity.User;
-import java.util.List;
+
+import java.util.Optional;
 
 public interface UserDao {
 
@@ -10,5 +11,7 @@ public interface UserDao {
     User checkDuplicate(String name);
 
     void addUser(User newUser);
+
+    User findByName(String name);
 
 }
