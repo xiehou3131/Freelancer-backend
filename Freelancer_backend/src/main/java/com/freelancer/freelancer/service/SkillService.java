@@ -10,4 +10,6 @@ public interface SkillService {
 
     void addSkill(Skill newSkill);
 
+    List<Skill> getSkillsByCategory(Integer category);
+
 }

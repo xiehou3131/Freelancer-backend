@@ -15,10 +15,10 @@ import javax.persistence.*;
 public class NeedSkill {
 
     @Id
-    private int wId;
+    private int w_id;
 
     @Id
-    private int sId;
+    private int s_id;
 
     private int type;
 

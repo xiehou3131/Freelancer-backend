@@ -4,6 +4,7 @@ import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.User;
 import com.freelancer.freelancer.entity.DoWork;
 import com.freelancer.freelancer.entity.Work;
+import com.freelancer.freelancer.service.UserService;
 import com.freelancer.freelancer.service.WorkService;
 import com.freelancer.freelancer.service.DoWorkService;
 import com.freelancer.freelancer.utils.msgutils.Msg;
@@ -38,6 +39,9 @@ public class WorkController {
     private WorkService workService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private DoWorkService doWorkService;
 
     private Timestamp String2Date(String str){
@@ -51,6 +55,14 @@ public class WorkController {
             System.out.println("Error when convert string to date");
             return null;
         }
+    }
+
+    @RequestMapping("/getWorkDetail")
+    public JSONObject getWorkDetail(@RequestBody Map<String, Integer> params) {
+        Integer wId = params.get("w_id");
+        Work work = workService.findByWId(wId);
+        User postman = userService.findById(work.getUId());
+
     }
 
     @RequestMapping("/postWork")
