@@ -20,4 +20,7 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public void addSkill(Skill newSkill) { skillDao.addSkill(newSkill); }
 
+    @Override
+    public List<Skill> getSkillsByCategory(Integer category) { return skillDao.getSkillsByCategory(category); }
+
 }

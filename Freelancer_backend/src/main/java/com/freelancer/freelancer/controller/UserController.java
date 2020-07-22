@@ -41,30 +41,7 @@ public class UserController {
     public Msg login(@RequestBody Map<String, String> params){
         String name = params.get(Constant.NAME);
         String password = params.get(Constant.PASSWORD);
-        if (name == null || password == null) {
-            return MsgUtil.makeMsg(MsgCode.NOT_ENTERING_ANYTHING);
-        }
-        User user = userService.checkUser(name, password);
-        if(user != null){
-            JSONObject data = new JSONObject();
-            data.put(Constant.NAME, user.getName());
-            data.put(Constant.USER_TYPE, user.getType());
-            SessionUtil.setSession(data);
-
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-        Administrator administrator = administratorService.checkAdmin(name, password);
-        if(administrator != null) {
-            JSONObject data = new JSONObject();
-            data.put(Constant.NAME, administrator.getName());
-            data.put(Constant.USER_TYPE, 1);
-            SessionUtil.setSession(data);
-
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-        else{
-            return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR);
-        }
+        return userService.login(name, password);
     }
 
     @RequestMapping("/logout")

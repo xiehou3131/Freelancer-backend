@@ -57,9 +57,10 @@ public class SkillController {
         userSkillService.addUserSkill(newUserSkill);
     }
 
-//    @RequestMapping("/getSkillsByCategory")
-//    public List<Skill> getSkillsByCategory(@RequestBody Map<String, Integer> params) {
-//
-//    }
+    @RequestMapping("/getSkillsByCategory")
+    public List<Skill> getSkillsByCategory(@RequestBody Map<String, Integer> params) {
+        Integer category = params.get("category");
+        return skillService.getSkillsByCategory(category);
+    }
 
 }
