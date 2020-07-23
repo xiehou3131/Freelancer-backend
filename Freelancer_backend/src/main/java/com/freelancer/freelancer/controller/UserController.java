@@ -19,15 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 @Api("userController相关api")
 public class UserController {
-
 
     @Autowired
     private UserService userService;
@@ -37,41 +34,20 @@ public class UserController {
 
     @ApiOperation("login")
     @RequestMapping("/login")
-    //public Msg login(@RequestParam(Constant.USERNAME) String username, @RequestParam(Constant.PASSWORD) String password, @RequestParam(Constant.REMEMBER_ME) Boolean remember){
-    public Msg login(@RequestBody Map<String, String> params){
+    // public Msg login(@RequestParam(Constant.USERNAME) String username,
+    // @RequestParam(Constant.PASSWORD) String password,
+    // @RequestParam(Constant.REMEMBER_ME) Boolean remember){
+    public Msg login(@RequestBody Map<String, String> params) {
         String name = params.get(Constant.NAME);
         String password = params.get(Constant.PASSWORD);
-        if (name == null || password == null) {
-            return MsgUtil.makeMsg(MsgCode.NOT_ENTERING_ANYTHING);
-        }
-        User user = userService.checkUser(name, password);
-        if(user != null){
-            JSONObject data = new JSONObject();
-            data.put(Constant.NAME, user.getName());
-            data.put(Constant.USER_TYPE, user.getType());
-            SessionUtil.setSession(data);
-
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-        Administrator administrator = administratorService.checkAdmin(name, password);
-        if(administrator != null) {
-            JSONObject data = new JSONObject();
-            data.put(Constant.NAME, administrator.getName());
-            data.put(Constant.USER_TYPE, 1);
-            SessionUtil.setSession(data);
-
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-        else{
-            return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR);
-        }
+        return userService.login(name, password);
     }
 
     @RequestMapping("/logout")
-    public Msg logout(){
+    public Msg logout() {
         Boolean status = SessionUtil.removeSession();
 
-        if(status){
+        if (status) {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGOUT_SUCCESS_MSG);
         }
         return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.LOGOUT_ERR_MSG);
@@ -91,9 +67,9 @@ public class UserController {
         newUser.setName(name);
         newUser.setPassword(password);
         newUser.setPhone(phone);
-        newUser.setEMail(email);
-        newUser.setTrueName(true_name);
-        newUser.setCreditCard(credit_card);
+        newUser.setE_mail(email);
+        newUser.setTrue_name(true_name);
+        newUser.setCredit_card(credit_card);
         newUser.setType(Integer.parseInt(type_s));
 
         User duplicate = userService.checkDuplicate(name);
@@ -110,21 +86,19 @@ public class UserController {
             data.remove(Constant.PASSWORD);
 
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.REGISTER_SUCCESS_MSG, data);
-        }
-        else {
+        } else {
             return MsgUtil.makeMsg(MsgCode.DUPLICATE_USER_ERROR);
         }
 
     }
 
     @RequestMapping("/checkSession")
-    public Msg checkSession(){
+    public Msg checkSession() {
         JSONObject auth = SessionUtil.getAuth();
 
-        if(auth == null){
+        if (auth == null) {
             return MsgUtil.makeMsg(MsgCode.NOT_LOGGED_IN_ERROR);
-        }
-        else{
+        } else {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
@@ -132,11 +106,8 @@ public class UserController {
     @RequestMapping("/getUserInfo")
     public User getUserInfo(@RequestBody Map<String, String> params) {
         String name = params.get("name");
-        System.out.println(params);
         User user = userService.findByName(name);
-        System.out.println(user);
-        user.setPassword("");
-//        user.setPassword(null);
+        user.setPassword(null);
         return user;
     }
 }

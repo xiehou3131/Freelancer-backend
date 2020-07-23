@@ -1,8 +1,11 @@
 package com.freelancer.freelancer.serviceimpl;
 
+import com.freelancer.freelancer.dao.UserDao;
 import com.freelancer.freelancer.dao.WorkDao;
+import com.freelancer.freelancer.entity.User;
 import com.freelancer.freelancer.entity.Work;
 import com.freelancer.freelancer.service.WorkService;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

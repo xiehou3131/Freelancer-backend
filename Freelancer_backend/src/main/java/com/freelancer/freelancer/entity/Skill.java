@@ -18,5 +18,6 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int s_id;
     private String skillName;
+    private int category;
 
 }
