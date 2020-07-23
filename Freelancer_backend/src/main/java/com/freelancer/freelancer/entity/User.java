@@ -26,4 +26,14 @@ public class User {
     private int type;
     private int is_banned;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setPassword(String str){
+        password = str;
+    }
 }

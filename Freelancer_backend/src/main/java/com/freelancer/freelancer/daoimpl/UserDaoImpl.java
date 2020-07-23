@@ -28,7 +28,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findByName(String name) {
         User user = userRepository.findByName(name);
-        user.setPassword(null);
         return user;
     }
 
