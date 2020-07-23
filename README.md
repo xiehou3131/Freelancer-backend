@@ -3,5 +3,5 @@ backend of the Freelancer project
 
 
 ## 7/23
-spring security authentication
-upcoming work: authority
+1. spring security authentication
+2. upcoming work: authority
