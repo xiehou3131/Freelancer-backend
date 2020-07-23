@@ -6,7 +6,6 @@ import com.freelancer.freelancer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +24,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(User newUser) { userRepository.save(newUser); }
+
+    @Override
+    public User findByName(String name) { return userRepository.findByName(name); }
 
 }

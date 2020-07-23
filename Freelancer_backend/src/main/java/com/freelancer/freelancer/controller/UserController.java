@@ -128,4 +128,15 @@ public class UserController {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
+
+    @RequestMapping("/getUserInfo")
+    public User getUserInfo(@RequestBody Map<String, String> params) {
+        String name = params.get("name");
+        System.out.println(params);
+        User user = userService.findByName(name);
+        System.out.println(user);
+        user.setPassword("");
+//        user.setPassword(null);
+        return user;
+    }
 }
