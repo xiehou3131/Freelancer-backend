@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "u_id")
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer", "fieldHandler" })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "u_id")
 public class User {
 
     @Id
@@ -26,4 +27,14 @@ public class User {
     private int type;
     private int is_banned;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setPassword(String str){
+        password = str;
+    }
 }

@@ -9,13 +9,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface WorkRepository extends JpaRepository<Work,Integer> {
+public interface WorkRepository extends JpaRepository<Work, Integer> {
     @Query("select w from Work w where w.title = ?1")
     public List<Work> findByTitle(String title);
 
-    @Query("select w from Work w")
+    @Query("select w from Work w where w.status=0")
     Page<Work> getWorks(Pageable pageable);
 
     @Query("select w from Work w where w.uId = ?1")
     Page<Work> getPostedWorks(Integer uId, Pageable pageable);
+
+    @Query("select w from Work w where w.w_id= ?1")
+    Work getAWork(Integer wId);
 }

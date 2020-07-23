@@ -20,15 +20,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User checkDuplicate(String name) { return userRepository.checkDuplicate(name); }
+    public User checkDuplicate(String name) {
+        return userRepository.checkDuplicate(name);
+    }
 
     @Override
-    public void addUser(User newUser) { userRepository.save(newUser); }
+    public void addUser(User newUser) {
+        userRepository.save(newUser);
+    }
 
     @Override
     public User findByName(String name) {
         User user = userRepository.findByName(name);
-        user.setPassword(null);
         return user;
     }
 
@@ -36,6 +39,7 @@ public class UserDaoImpl implements UserDao {
     public User findById(Integer uId) {
         User user = userRepository.getOne(uId);
         user.setPassword(null);
-        return user; }
+        return user;
+    }
 
 }

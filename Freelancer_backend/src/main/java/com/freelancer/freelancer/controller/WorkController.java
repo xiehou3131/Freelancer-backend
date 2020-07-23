@@ -1,5 +1,6 @@
 package com.freelancer.freelancer.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.Skill;
 import com.freelancer.freelancer.entity.User;
@@ -25,14 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 @RestController
 public class WorkController {
@@ -52,14 +51,14 @@ public class WorkController {
     @Autowired
     private NeedSkillService needSkillService;
 
-    private Timestamp String2Date(String str){
+    private Timestamp String2Date(String str) {
         try {
-            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = dateFormat.parse(str);
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
             return timestamp;
-        } catch(Exception e) { //this generic but you can control another types of exception
+        } catch (Exception e) { // this generic but you can control another types of exception
             System.out.println("Error when convert string to date");
             return null;
         }
@@ -68,38 +67,38 @@ public class WorkController {
     @RequestMapping("/getWorkDetail")
     public JSONObject getWorkDetail(@RequestBody Map<String, Integer> params) {
         Integer wId = params.get("w_id");
-//        JsonConfig jsonConfig = new JsonConfig();
-//        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+        // JsonConfig jsonConfig = new JsonConfig();
+        // jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
-//        User postman = userService.findById(work.getUId());
-//        JSONObject userJson = JSONObject.fromObject(postman);
-//
-//        List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
-//        List<Skill> necessarySkills = new ArrayList<>();
-//        for (Integer sId : necessarySkillList) {
-//            necessarySkills.add(skillService.findById(sId));
-//        }
-//        JSONArray necessarySkillJson = JSONArray.fromObject(necessarySkills);
-//
-//        List<Integer> unnecessarySkillList = needSkillService.getUnnecessarySkillListByWId(wId);
-//        List<Skill> unnecessarySkills = new ArrayList<>();
-//        for (Integer sId : unnecessarySkillList) {
-//            unnecessarySkills.add(skillService.findById(sId));
-//        }
-//        JSONArray unnecessarySkillJson = JSONArray.fromObject(unnecessarySkills);
+        User postman = userService.findById(work.getUId());
+        JSONObject userJson = JSONObject.fromObject(postman);
+
+        List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
+        List<Skill> necessarySkills = new ArrayList<>();
+        for (Integer sId : necessarySkillList) {
+            necessarySkills.add(skillService.findById(sId));
+        }
+        JSONArray necessarySkillJson = JSONArray.fromObject(necessarySkills);
+
+        List<Integer> unnecessarySkillList = needSkillService.getUnnecessarySkillListByWId(wId);
+        List<Skill> unnecessarySkills = new ArrayList<>();
+        for (Integer sId : unnecessarySkillList) {
+            unnecessarySkills.add(skillService.findById(sId));
+        }
+        JSONArray unnecessarySkillJson = JSONArray.fromObject(unnecessarySkills);
 
         JSONObject data = new JSONObject();
-//        data.putAll(workJson);
-//        data.putAll(userJson);
-//        data.put("necessarySkills", necessarySkillJson);
-//        data.put("unnecessarySkills", unnecessarySkillJson);
+        data.putAll(workJson);
+        data.putAll(userJson);
+        data.put("necessarySkills", necessarySkillJson);
+        data.put("unnecessarySkills", unnecessarySkillJson);
 
         return data;
     }
 
     @RequestMapping("/postWork")
-    public void addProject(@RequestBody Map<String, String> params) {
+    public Boolean addProject(@RequestBody Map<String, String> params) {
         System.out.println(params.get("title"));
         String name = params.get("title");
         Double paymentLower = Double.parseDouble(params.get("paymentLower"));
@@ -108,7 +107,6 @@ public class WorkController {
         Timestamp biddingDdl = String2Date(params.get("biddingDdl"));
         Timestamp finishDdl = String2Date(params.get("finishDdl"));
         Integer UId = Integer.parseInt(params.get("uId"));
-
 
         Work work = new Work();
         work.setTitle(name);
@@ -119,6 +117,7 @@ public class WorkController {
         work.setBiddingDdl(biddingDdl);
         work.setFinishDdl(finishDdl);
         workService.save(work);
+        return true;
     }
 
     @RequestMapping("/getWorks")
@@ -126,7 +125,10 @@ public class WorkController {
         System.out.println("test");
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
         return workService.getWorks(pageable).getContent();
@@ -137,7 +139,10 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
@@ -149,12 +154,16 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
-        List<Work> workerWorks = new ArrayList<Work>();;
+        List<Work> workerWorks = new ArrayList<Work>();
+        ;
         for (DoWork doWork : finishedWorks) {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }

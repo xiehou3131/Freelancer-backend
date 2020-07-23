@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "skill")
-@JsonIgnoreProperties(value = {"handler","hibernateLazyInitializer","fieldHandler"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "s_id")
+@JsonIgnoreProperties(value = { "handler", "hibernateLazyInitializer", "fieldHandler" })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "s_id")
 public class Skill {
 
     @Id
