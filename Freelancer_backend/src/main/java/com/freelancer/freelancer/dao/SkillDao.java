@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface SkillDao {
 
+    Skill findById(Integer sId);
+
     Skill checkDuplicate(String skillName);
 
     void addSkill(Skill newSkill);
