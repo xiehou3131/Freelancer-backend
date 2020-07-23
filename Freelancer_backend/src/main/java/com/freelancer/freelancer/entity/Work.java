@@ -27,7 +27,4 @@ public class Work {
     private String description;
     private int status;
 
-    public String getTitle() {
-        return title;
-    }
 }

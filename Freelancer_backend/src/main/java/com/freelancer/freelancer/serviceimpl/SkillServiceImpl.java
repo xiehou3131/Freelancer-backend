@@ -15,6 +15,9 @@ public class SkillServiceImpl implements SkillService {
     private SkillDao skillDao;
 
     @Override
+    public Skill findById(Integer sId) { return skillDao.findById(sId); }
+
+    @Override
     public Skill checkDuplicate(String skillName) { return skillDao.checkDuplicate(skillName); }
 
     @Override

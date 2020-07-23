@@ -1,17 +1,19 @@
 package com.freelancer.freelancer.controller;
 
 import com.freelancer.freelancer.constant.Constant;
+import com.freelancer.freelancer.entity.Skill;
 import com.freelancer.freelancer.entity.User;
 import com.freelancer.freelancer.entity.DoWork;
 import com.freelancer.freelancer.entity.Work;
-import com.freelancer.freelancer.service.UserService;
-import com.freelancer.freelancer.service.WorkService;
-import com.freelancer.freelancer.service.DoWorkService;
+import com.freelancer.freelancer.service.*;
 import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
 import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +44,13 @@ public class WorkController {
     private UserService userService;
 
     @Autowired
+    private SkillService skillService;
+
+    @Autowired
     private DoWorkService doWorkService;
+
+    @Autowired
+    private NeedSkillService needSkillService;
 
     private Timestamp String2Date(String str){
         try {
@@ -60,9 +68,34 @@ public class WorkController {
     @RequestMapping("/getWorkDetail")
     public JSONObject getWorkDetail(@RequestBody Map<String, Integer> params) {
         Integer wId = params.get("w_id");
+//        JsonConfig jsonConfig = new JsonConfig();
+//        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
-        User postman = userService.findById(work.getUId());
+        JSONObject workJson = JSONObject.fromObject(work);
+//        User postman = userService.findById(work.getUId());
+//        JSONObject userJson = JSONObject.fromObject(postman);
+//
+//        List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
+//        List<Skill> necessarySkills = new ArrayList<>();
+//        for (Integer sId : necessarySkillList) {
+//            necessarySkills.add(skillService.findById(sId));
+//        }
+//        JSONArray necessarySkillJson = JSONArray.fromObject(necessarySkills);
+//
+//        List<Integer> unnecessarySkillList = needSkillService.getUnnecessarySkillListByWId(wId);
+//        List<Skill> unnecessarySkills = new ArrayList<>();
+//        for (Integer sId : unnecessarySkillList) {
+//            unnecessarySkills.add(skillService.findById(sId));
+//        }
+//        JSONArray unnecessarySkillJson = JSONArray.fromObject(unnecessarySkills);
 
+        JSONObject data = new JSONObject();
+//        data.putAll(workJson);
+//        data.putAll(userJson);
+//        data.put("necessarySkills", necessarySkillJson);
+//        data.put("unnecessarySkills", unnecessarySkillJson);
+
+        return data;
     }
 
     @RequestMapping("/postWork")
