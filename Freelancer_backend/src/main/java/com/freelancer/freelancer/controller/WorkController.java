@@ -71,30 +71,28 @@ public class WorkController {
         // jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
-        // User postman = userService.findById(work.getUId());
-        // JSONObject userJson = JSONObject.fromObject(postman);
-        //
-        // List<Integer> necessarySkillList =
-        // needSkillService.getNecessarySkillListByWId(wId);
-        // List<Skill> necessarySkills = new ArrayList<>();
-        // for (Integer sId : necessarySkillList) {
-        // necessarySkills.add(skillService.findById(sId));
-        // }
-        // JSONArray necessarySkillJson = JSONArray.fromObject(necessarySkills);
-        //
-        // List<Integer> unnecessarySkillList =
-        // needSkillService.getUnnecessarySkillListByWId(wId);
-        // List<Skill> unnecessarySkills = new ArrayList<>();
-        // for (Integer sId : unnecessarySkillList) {
-        // unnecessarySkills.add(skillService.findById(sId));
-        // }
-        // JSONArray unnecessarySkillJson = JSONArray.fromObject(unnecessarySkills);
+        User postman = userService.findById(work.getUId());
+        JSONObject userJson = JSONObject.fromObject(postman);
+
+        List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
+        List<Skill> necessarySkills = new ArrayList<>();
+        for (Integer sId : necessarySkillList) {
+            necessarySkills.add(skillService.findById(sId));
+        }
+        JSONArray necessarySkillJson = JSONArray.fromObject(necessarySkills);
+
+        List<Integer> unnecessarySkillList = needSkillService.getUnnecessarySkillListByWId(wId);
+        List<Skill> unnecessarySkills = new ArrayList<>();
+        for (Integer sId : unnecessarySkillList) {
+            unnecessarySkills.add(skillService.findById(sId));
+        }
+        JSONArray unnecessarySkillJson = JSONArray.fromObject(unnecessarySkills);
 
         JSONObject data = new JSONObject();
-        // data.putAll(workJson);
-        // data.putAll(userJson);
-        // data.put("necessarySkills", necessarySkillJson);
-        // data.put("unnecessarySkills", unnecessarySkillJson);
+        data.putAll(workJson);
+        data.putAll(userJson);
+        data.put("necessarySkills", necessarySkillJson);
+        data.put("unnecessarySkills", unnecessarySkillJson);
 
         return data;
     }
