@@ -2,10 +2,7 @@ package com.freelancer.freelancer.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.freelancer.freelancer.constant.Constant;
-import com.freelancer.freelancer.entity.Skill;
-import com.freelancer.freelancer.entity.User;
-import com.freelancer.freelancer.entity.DoWork;
-import com.freelancer.freelancer.entity.Work;
+import com.freelancer.freelancer.entity.*;
 import com.freelancer.freelancer.service.*;
 import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
@@ -50,6 +47,9 @@ public class WorkController {
 
     @Autowired
     private NeedSkillService needSkillService;
+
+    @Autowired
+    private ProposeWorkService proposeWorkService;
 
     private Timestamp String2Date(String str) {
         try {
@@ -167,5 +167,22 @@ public class WorkController {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
         return workerWorks;
+    }
+
+    @RequestMapping("/proposeWork")
+    public void proposeWork(@RequestBody Map<String, String> params){
+        String userName = params.get("name");
+        Integer uId = userService.findByName(userName).getU_id();
+        Integer wId = Integer.parseInt(params.get("w_id"));
+        Double expectPayment = Double.parseDouble(params.get("expect_payment"));
+        String remark = params.get("remark");
+
+        ProposeWork newPropose = new ProposeWork();
+        newPropose.setUId(uId);
+        newPropose.setWId(wId);
+        newPropose.setExpectPayment(expectPayment);
+        newPropose.setRemark(remark);
+
+        proposeWorkService.addPropose(newPropose);
     }
 }
