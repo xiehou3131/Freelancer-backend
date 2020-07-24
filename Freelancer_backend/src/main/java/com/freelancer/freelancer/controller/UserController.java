@@ -105,9 +105,13 @@ public class UserController {
 
     @RequestMapping("/getUserInfo")
     public User getUserInfo(@RequestBody Map<String, String> params) {
-        String name = params.get("name");
-        User user = userService.findByName(name);
-        user.setPassword(null);
-        return user;
+        String name = params.get(Constant.NAME);
+        JSONObject auth = SessionUtil.getAuth();
+        if(name.equals(auth.getString(Constant.NAME))){
+            User user = userService.findByName(name);
+            user.setPassword(null);
+            return user;
+        }
+        return null;
     }
 }

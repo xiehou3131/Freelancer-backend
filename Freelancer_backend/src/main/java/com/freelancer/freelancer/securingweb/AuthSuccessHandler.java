@@ -3,6 +3,7 @@ package com.freelancer.freelancer.securingweb;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.freelancer.freelancer.service.UserService;
 import com.freelancer.freelancer.utils.msgutils.Msg;
+import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
 import net.sf.json.JSONObject;
 import com.freelancer.freelancer.utils.msgutils.MsgCode;
 import com.freelancer.freelancer.utils.msgutils.MsgUtil;
@@ -24,7 +25,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         JSONObject data = new JSONObject();
         data.put("username", authentication.getName());
         Msg msg = MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        System.out.println(msg.toString());
+        SessionUtil.setSession(data);
         httpServletResponse.setContentType("application/json");
         httpServletResponse.setCharacterEncoding("UTF-8");
         ObjectMapper mapper = new ObjectMapper();
