@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "from User where name = :name and password = :password")
     User checkUser(@Param("name") String name, @Param("password") String password);

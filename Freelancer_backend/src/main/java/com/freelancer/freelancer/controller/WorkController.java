@@ -163,7 +163,6 @@ public class WorkController {
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
         List<Work> workerWorks = new ArrayList<Work>();
-        ;
         for (DoWork doWork : finishedWorks) {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
