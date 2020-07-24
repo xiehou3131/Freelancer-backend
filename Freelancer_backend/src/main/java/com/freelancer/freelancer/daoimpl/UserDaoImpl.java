@@ -37,9 +37,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(Integer uId) {
-        User user = userRepository.getOne(uId);
-        user.setPassword(null);
-        return user;
+        Optional<User> u = userRepository.findById(uId);
+        if (u.isEmpty()) {
+            return null;
+        } else {
+            User user = u.get();
+            user.setPassword(null);
+            return user;
+        }
     }
 
 }

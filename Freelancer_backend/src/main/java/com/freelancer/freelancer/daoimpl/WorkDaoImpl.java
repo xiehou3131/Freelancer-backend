@@ -17,19 +17,23 @@ import java.util.List;
 public class WorkDaoImpl implements WorkDao {
     @Autowired
     private WorkRepository workRepository;
+
     @Override
     public List<Work> findByTitle(String title) {
         return workRepository.findByTitle(title);
     }
 
     @Override
-    public Work findByWId(Integer wId) { return workRepository.getOne(wId); }
+    public Work findByWId(Integer wId) {
+        return workRepository.getAWork(wId);
+    }
 
     @Transactional
     @Override
     public void save(Work work) {
         em.persist(work);
     }
+
     @PersistenceContext
     private EntityManager em;
 
@@ -41,8 +45,8 @@ public class WorkDaoImpl implements WorkDao {
 
     @Override
     public Page<Work> getPostedWorks(Integer uId, Pageable pageable) {
-            Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
-            return postedWorks;
+        Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
+        return postedWorks;
     }
 
 }

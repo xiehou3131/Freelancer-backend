@@ -15,15 +15,23 @@ public class SkillDaoImpl implements SkillDao {
     SkillRepository skillRepository;
 
     @Override
-    public Skill findById(Integer sId) { return skillRepository.getOne(sId); }
+    public Skill findById(Integer sId) {
+        return skillRepository.findById(sId).get();
+    }
 
     @Override
-    public Skill checkDuplicate(String skillName) { return skillRepository.checkDuplicate(skillName); }
+    public Skill checkDuplicate(String skillName) {
+        return skillRepository.checkDuplicate(skillName);
+    }
 
     @Override
-    public void addSkill(Skill newSkill) { skillRepository.save(newSkill); }
+    public void addSkill(Skill newSkill) {
+        skillRepository.save(newSkill);
+    }
 
     @Override
-    public List<Skill> getSkillsByCategory(Integer category) { return skillRepository.getSkillsByCategory(category); }
+    public List<Skill> getSkillsByCategory(Integer category) {
+        return skillRepository.getSkillsByCategory(category);
+    }
 
 }
