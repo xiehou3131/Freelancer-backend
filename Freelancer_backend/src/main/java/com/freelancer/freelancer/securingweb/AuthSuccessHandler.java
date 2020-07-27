@@ -1,6 +1,7 @@
 package com.freelancer.freelancer.securingweb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.service.UserService;
 import com.freelancer.freelancer.utils.msgutils.Msg;
 import com.freelancer.freelancer.utils.sessionutils.SessionUtil;
@@ -23,7 +24,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         JSONObject data = new JSONObject();
-        data.put("username", authentication.getName());
+        data.put(Constant.NAME, authentication.getName());
+        data.put(Constant.USER_TYPE, authentication.getAuthorities());
         Msg msg = MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         SessionUtil.setSession(data);
         httpServletResponse.setContentType("application/json");
