@@ -16,7 +16,7 @@ import java.io.InputStream;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        //        //attempt Authentication when Content-Type is json
+        //attempt Authentication when Content-Type is json
         System.out.println(request);
         if(request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
 

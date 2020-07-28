@@ -43,4 +43,16 @@ public class User {
     public void setPassword(String str){
         password = str;
     }
+
+    public int getU_id() {
+        return u_id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public int getIs_banned() {
+        return is_banned;
+    }
 }
