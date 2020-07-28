@@ -62,6 +62,7 @@ public class UserController {
         String true_name = params.get(Constant.TRUE_NAME);
         String credit_card = params.get(Constant.CREDIT_CARD);
         String type_s = params.get(Constant.TYPE);
+        String avator = params.get("avatar");
 
         User newUser = new User();
         newUser.setName(name);
@@ -71,6 +72,7 @@ public class UserController {
         newUser.setTrue_name(true_name);
         newUser.setCredit_card(credit_card);
         newUser.setType(Integer.parseInt(type_s));
+        newUser.setAvatar(avator);
 
         User duplicate = userService.checkDuplicate(name);
 
