@@ -13,6 +13,7 @@ import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +31,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class })
 public class WorkController {
 
     @Autowired
@@ -53,14 +54,14 @@ public class WorkController {
     @Autowired
     private ProposeWorkService proposeWorkService;
 
-    private Timestamp String2Date(String str){
+    private Timestamp String2Date(String str) {
         try {
-            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = dateFormat.parse(str);
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
             return timestamp;
-        } catch(Exception e) { //this generic but you can control another types of exception
+        } catch (Exception e) { // this generic but you can control another types of exception
             System.out.println("Error when convert string to date");
             return null;
         }
@@ -69,8 +70,8 @@ public class WorkController {
     @RequestMapping("/getWorkDetail")
     public JSONObject getWorkDetail(@RequestBody Map<String, Integer> params) {
         Integer wId = params.get("w_id");
-//        JsonConfig jsonConfig = new JsonConfig();
-//        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+        // JsonConfig jsonConfig = new JsonConfig();
+        // jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
         User postman = userService.findById(work.getUId());
@@ -110,7 +111,6 @@ public class WorkController {
         Timestamp finishDdl = String2Date(params.get("finishDdl"));
         Integer UId = Integer.parseInt(params.get("uId"));
 
-
         Work work = new Work();
         work.setTitle(name);
         work.setUId(UId);
@@ -127,7 +127,10 @@ public class WorkController {
         System.out.println("test");
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
         return workService.getWorks(pageable).getContent();
@@ -138,7 +141,10 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
@@ -150,42 +156,45 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
+        if (PageNum <= 0 || PageContentNum <= 0) {
+            PageNum = 1;
+            PageContentNum = 20;
+        }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
-        List<Work> workerWorks = new ArrayList<Work>();;
+        List<Work> workerWorks = new ArrayList<Work>();
+        ;
         for (DoWork doWork : finishedWorks) {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
         return workerWorks;
     }
 
-    //admin only?
+    // admin only?
     @RequestMapping("/changeWorkStatus")
-    public boolean changeWorkStatus(@RequestBody Map<String, Integer> params){
+    public boolean changeWorkStatus(@RequestBody Map<String, Integer> params) {
         Integer w_id = params.get("w_id");
         Integer status = params.get("status");
 
         JSONObject auth = SessionUtil.getAuth();
         Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
         Work work = workService.findByWId(w_id);
-        if(u_id != work.getU_id()){
+        if (u_id != work.getUId()) {
             return false;
-        }
-        else{
+        } else {
             work.setStatus(status);
             return true;
         }
     }
 
     @RequestMapping("/cancelApply")
-    public boolean cancelApply(@RequestBody Map<String, Integer> params){
+    public boolean cancelApply(@RequestBody Map<String, Integer> params) {
         Integer w_id = params.get("w_id");
         Integer u_id = params.get("u_id");
         ProposeWork proposeWork = proposeWorkService.getPropseWorkByPK(w_id, u_id);
-        if(proposeWork == null)
+        if (proposeWork == null)
             return false;
         proposeWorkService.delProposeWork(proposeWork);
         return true;
