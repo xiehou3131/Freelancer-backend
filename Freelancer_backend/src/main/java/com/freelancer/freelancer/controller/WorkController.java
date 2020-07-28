@@ -1,6 +1,5 @@
 package com.freelancer.freelancer.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.*;
 import com.freelancer.freelancer.service.*;
@@ -18,10 +17,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.session.Session;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 public class WorkController {
@@ -51,14 +53,14 @@ public class WorkController {
     @Autowired
     private ProposeWorkService proposeWorkService;
 
-    private Timestamp String2Date(String str) {
+    private Timestamp String2Date(String str){
         try {
-            // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date parsedDate = dateFormat.parse(str);
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
             return timestamp;
-        } catch (Exception e) { // this generic but you can control another types of exception
+        } catch(Exception e) { //this generic but you can control another types of exception
             System.out.println("Error when convert string to date");
             return null;
         }
@@ -67,8 +69,8 @@ public class WorkController {
     @RequestMapping("/getWorkDetail")
     public JSONObject getWorkDetail(@RequestBody Map<String, Integer> params) {
         Integer wId = params.get("w_id");
-        // JsonConfig jsonConfig = new JsonConfig();
-        // jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+//        JsonConfig jsonConfig = new JsonConfig();
+//        jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
         User postman = userService.findById(work.getUId());
@@ -98,7 +100,7 @@ public class WorkController {
     }
 
     @RequestMapping("/postWork")
-    public Boolean addProject(@RequestBody Map<String, String> params) {
+    public void addProject(@RequestBody Map<String, String> params) {
         System.out.println(params.get("title"));
         String name = params.get("title");
         Double paymentLower = Double.parseDouble(params.get("paymentLower"));
@@ -107,6 +109,7 @@ public class WorkController {
         Timestamp biddingDdl = String2Date(params.get("biddingDdl"));
         Timestamp finishDdl = String2Date(params.get("finishDdl"));
         Integer UId = Integer.parseInt(params.get("uId"));
+
 
         Work work = new Work();
         work.setTitle(name);
@@ -117,7 +120,6 @@ public class WorkController {
         work.setBiddingDdl(biddingDdl);
         work.setFinishDdl(finishDdl);
         workService.save(work);
-        return true;
     }
 
     @RequestMapping("/getWorks")
@@ -125,10 +127,7 @@ public class WorkController {
         System.out.println("test");
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
-        if (PageNum <= 0 || PageContentNum <= 0) {
-            PageNum = 1;
-            PageContentNum = 20;
-        }
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
         return workService.getWorks(pageable).getContent();
@@ -139,10 +138,7 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <= 0 || PageContentNum <= 0) {
-            PageNum = 1;
-            PageContentNum = 20;
-        }
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
@@ -154,35 +150,44 @@ public class WorkController {
         Integer PageNum = params.get("pagenum");
         Integer PageContentNum = params.get("size");
         Integer uId = params.get("u_id");
-        if (PageNum <= 0 || PageContentNum <= 0) {
-            PageNum = 1;
-            PageContentNum = 20;
-        }
+        if (PageNum <=0 || PageContentNum <=0) { PageNum = 1; PageContentNum = 20; }
 
         Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
-        List<Work> workerWorks = new ArrayList<Work>();
+        List<Work> workerWorks = new ArrayList<Work>();;
         for (DoWork doWork : finishedWorks) {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
         return workerWorks;
     }
 
-    @RequestMapping("/proposeWork")
-    public void proposeWork(@RequestBody Map<String, String> params){
-        String userName = params.get("name");
-        Integer uId = userService.findByName(userName).getU_id();
-        Integer wId = Integer.parseInt(params.get("w_id"));
-        Double expectPayment = Double.parseDouble(params.get("expect_payment"));
-        String remark = params.get("remark");
+    //admin only?
+    @RequestMapping("/changeWorkStatus")
+    public boolean changeWorkStatus(@RequestBody Map<String, Integer> params){
+        Integer w_id = params.get("w_id");
+        Integer status = params.get("status");
 
-        ProposeWork newPropose = new ProposeWork();
-        newPropose.setUId(uId);
-        newPropose.setWId(wId);
-        newPropose.setExpectPayment(expectPayment);
-        newPropose.setRemark(remark);
+        JSONObject auth = SessionUtil.getAuth();
+        Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
+        Work work = workService.findByWId(w_id);
+        if(u_id != work.getU_id()){
+            return false;
+        }
+        else{
+            work.setStatus(status);
+            return true;
+        }
+    }
 
-        proposeWorkService.addPropose(newPropose);
+    @RequestMapping("/cancelApply")
+    public boolean cancelApply(@RequestBody Map<String, Integer> params){
+        Integer w_id = params.get("w_id");
+        Integer u_id = params.get("u_id");
+        ProposeWork proposeWork = proposeWorkService.getPropseWorkByPK(w_id, u_id);
+        if(proposeWork == null)
+            return false;
+        proposeWorkService.delProposeWork(proposeWork);
+        return true;
     }
 }
