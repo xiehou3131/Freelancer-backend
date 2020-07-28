@@ -18,7 +18,12 @@ public class UserPrincipal implements UserDetails {
     @Override
     public Set<GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if(user.getType() == 1){
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        else{
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
         return authorities;
     }
 
@@ -40,6 +45,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
+        // true for isNonLocked
         return true;
     }
 
@@ -50,6 +56,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getIs_banned() != 1;
     }
 }

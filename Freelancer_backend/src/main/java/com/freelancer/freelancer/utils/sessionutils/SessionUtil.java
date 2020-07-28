@@ -38,7 +38,8 @@ public class SessionUtil {
                 JSONObject ret = new JSONObject();
                 ret.put(Constant.USER_ID, (Integer)session.getAttribute(Constant.USER_ID));
                 ret.put(Constant.NAME, (String)session.getAttribute(Constant.NAME));
-                ret.put(Constant.USER_TYPE, (Integer)session.getAttribute(Constant.USER_TYPE));
+                //ret.put(Constant.USER_TYPE, (Integer)session.getAttribute(Constant.USER_TYPE));
+                ret.put(Constant.USER_TYPE, session.getAttribute(Constant.USER_TYPE));
                 return ret;
             }
         }
