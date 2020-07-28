@@ -24,7 +24,12 @@ public class Work {
     private Double paymentHigher;
     private Timestamp biddingDdl;
     private Timestamp finishDdl;
-    private String description;
     private int status;
+
+    @Transient
+    private String description;
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
 
 }

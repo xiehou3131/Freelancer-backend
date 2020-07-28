@@ -27,6 +27,12 @@ public class User {
     private int type;
     private int is_banned;
 
+    @Transient
+    private String avatar;
+    public String getAvatar() { return avatar; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
     public String getPassword() {
         return password;
     }
