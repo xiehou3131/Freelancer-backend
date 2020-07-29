@@ -1,6 +1,5 @@
 package com.freelancer.freelancer.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.*;
 import com.freelancer.freelancer.service.*;
@@ -14,10 +13,12 @@ import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.session.Session;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class })
 public class WorkController {
 
     @Autowired
@@ -98,7 +101,7 @@ public class WorkController {
     }
 
     @RequestMapping("/postWork")
-    public Boolean addProject(@RequestBody Map<String, String> params) {
+    public void addProject(@RequestBody Map<String, String> params) {
         System.out.println(params.get("title"));
         String name = params.get("title");
         Double paymentLower = Double.parseDouble(params.get("paymentLower"));
@@ -117,7 +120,6 @@ public class WorkController {
         work.setBiddingDdl(biddingDdl);
         work.setFinishDdl(finishDdl);
         workService.save(work);
-        return true;
     }
 
     @RequestMapping("/getWorks")
@@ -163,26 +165,38 @@ public class WorkController {
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
         List<Work> workerWorks = new ArrayList<Work>();
+        ;
         for (DoWork doWork : finishedWorks) {
             workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
         return workerWorks;
     }
 
-    @RequestMapping("/proposeWork")
-    public void proposeWork(@RequestBody Map<String, String> params){
-        String userName = params.get("name");
-        Integer uId = userService.findByName(userName).getU_id();
-        Integer wId = Integer.parseInt(params.get("w_id"));
-        Double expectPayment = Double.parseDouble(params.get("expect_payment"));
-        String remark = params.get("remark");
+    // admin only?
+    @RequestMapping("/changeWorkStatus")
+    public boolean changeWorkStatus(@RequestBody Map<String, Integer> params) {
+        Integer w_id = params.get("w_id");
+        Integer status = params.get("status");
 
-        ProposeWork newPropose = new ProposeWork();
-        newPropose.setUId(uId);
-        newPropose.setWId(wId);
-        newPropose.setExpectPayment(expectPayment);
-        newPropose.setRemark(remark);
+        JSONObject auth = SessionUtil.getAuth();
+        Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
+        Work work = workService.findByWId(w_id);
+        if (u_id != work.getUId()) {
+            return false;
+        } else {
+            work.setStatus(status);
+            return true;
+        }
+    }
 
-        proposeWorkService.addPropose(newPropose);
+    @RequestMapping("/cancelApply")
+    public boolean cancelApply(@RequestBody Map<String, Integer> params) {
+        Integer w_id = params.get("w_id");
+        Integer u_id = params.get("u_id");
+        ProposeWork proposeWork = proposeWorkService.getPropseWorkByPK(w_id, u_id);
+        if (proposeWork == null)
+            return false;
+        proposeWorkService.delProposeWork(proposeWork);
+        return true;
     }
 }
