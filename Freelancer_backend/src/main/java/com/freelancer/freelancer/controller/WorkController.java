@@ -75,6 +75,7 @@ public class WorkController {
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
         User postman = userService.findById(work.getU_id());
+        postman.setPassword(null);
         JSONObject userJson = JSONObject.fromObject(postman);
 
         List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);

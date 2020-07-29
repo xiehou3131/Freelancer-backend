@@ -26,7 +26,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User checkDuplicate(String name) { return userRepository.checkDuplicate(name); }
+    public User checkDuplicate(String name) {
+        return userRepository.checkDuplicate(name);
+    }
 
     @Override
     public void addUser(User newUser) {
@@ -38,7 +40,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findByName(String name) {
         User user = userRepository.findByName(name);
-        user.setPassword(null);
         Optional<UserAvatar> userAvatar = userAvatarRepository.findById(user.getU_id());
         if (userAvatar.isPresent()) {
             user.setAvatar(userAvatar.get().getAvator());
@@ -51,8 +52,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(Integer uId) {
-        User user = userRepository.getAUser(uId);
-        user.setPassword(null);
+        User user = userRepository.findById(uId).get();
         Optional<UserAvatar> userAvatar = userAvatarRepository.findById(user.getU_id());
         if (userAvatar.isPresent()) {
             user.setAvatar(userAvatar.get().getAvator());
