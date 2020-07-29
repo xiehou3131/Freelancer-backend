@@ -1,6 +1,5 @@
-package com.freelancer.freelancer.daoimpl;
+package com.freelancer.freelancer;
 
-import com.freelancer.freelancer.FreelancerApplicationTests;
 import com.freelancer.freelancer.dao.WorkDao;
 import com.freelancer.freelancer.entity.Work;
 import com.freelancer.freelancer.repository.WorkRepository;
@@ -21,11 +20,11 @@ import java.sql.Timestamp;
 * WorkDaoImpl Tester.
 *
 * @author <Authors name>
-* @since <pre>7ï¿½ï¿½ 15, 2020</pre>
+* @since <pre>7ÔÂ 15, 2020</pre>
 * @version 1.0
 */
 @RunWith(SpringRunner.class)
-public class WorkDaoImplTest extends FreelancerApplicationTests {
+public class WorkDaoImplTest extends FreelancerApplicationTests{
 @Autowired
 private WorkDao workDao;
 @Autowired

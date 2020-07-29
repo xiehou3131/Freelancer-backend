@@ -16,7 +16,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     @Query("select w from Work w where w.status=0")
     Page<Work> getWorks(Pageable pageable);
 
-    @Query("select w from Work w where w.uId = ?1")
+    @Query("select w from Work w where w.u_id = ?1")
     Page<Work> getPostedWorks(Integer uId, Pageable pageable);
 
     @Query("select w from Work w where w.w_id= ?1")

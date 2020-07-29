@@ -27,6 +27,12 @@ public class User {
     private int type;
     private int is_banned;
 
+    @Transient
+    private String avatar;
+    public String getAvatar() { return avatar; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
     public String getPassword() {
         return password;
     }
@@ -36,5 +42,17 @@ public class User {
     }
     public void setPassword(String str){
         password = str;
+    }
+
+    public int getU_id() {
+        return u_id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public int getIs_banned() {
+        return is_banned;
     }
 }

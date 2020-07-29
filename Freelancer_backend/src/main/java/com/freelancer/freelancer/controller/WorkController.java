@@ -74,7 +74,8 @@ public class WorkController {
         // jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
-        User postman = userService.findById(work.getUId());
+        User postman = userService.findById(work.getU_id());
+        postman.setPassword(null);
         JSONObject userJson = JSONObject.fromObject(postman);
 
         List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
@@ -113,7 +114,7 @@ public class WorkController {
 
         Work work = new Work();
         work.setTitle(name);
-        work.setUId(UId);
+        work.setU_id(UId);
         work.setPaymentLower(paymentLower);
         work.setPaymentHigher(paymentHigher);
         work.setDescription(description);
@@ -181,7 +182,7 @@ public class WorkController {
         JSONObject auth = SessionUtil.getAuth();
         Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
         Work work = workService.findByWId(w_id);
-        if (u_id != work.getUId()) {
+        if (u_id != work.getU_id()) {
             return false;
         } else {
             work.setStatus(status);
