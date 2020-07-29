@@ -83,7 +83,7 @@ public void testSave() throws Exception {
     work.setPaymentHigher(30.0);
     work.setBiddingDdl(timestamp);
     work.setFinishDdl(timestamp);
-    work.setUId(1);
+    work.setU_id(1);
     workDao.save(work);
     Work work1 = workRepository.getOne(work.getW_id());
     assertEquals(work.getTitle(), work1.getTitle());
