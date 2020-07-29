@@ -15,20 +15,20 @@ import io.swagger.models.auth.In;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @Api("userController相关api")
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class })
 public class UserController {
-
 
     @Autowired
     private UserService userService;
@@ -36,20 +36,23 @@ public class UserController {
     @Autowired
     private AdministratorService administratorService;
 
-//    @ApiOperation("login")
-//    @RequestMapping("/login")
-//    //public Msg login(@RequestParam(Constant.USERNAME) String username, @RequestParam(Constant.PASSWORD) String password, @RequestParam(Constant.REMEMBER_ME) Boolean remember){
-//    public Msg login(@RequestBody Map<String, String> params){
-//        String name = params.get(Constant.NAME);
-//        String password = params.get(Constant.PASSWORD);
-//        return userService.login(name, password);
-//    }
+    // @ApiOperation("login")
+    // @RequestMapping("/login")
+    // // public Msg login(@RequestParam(Constant.USERNAME) String username,
+    // // @RequestParam(Constant.PASSWORD) String password,
+    // // @RequestParam(Constant.REMEMBER_ME) Boolean remember){
+    // public Msg login(@RequestBody Map<String, String> params) {
+    // System.out.println("in login");
+    // String name = params.get(Constant.NAME);
+    // String password = params.get(Constant.PASSWORD);
+    // return userService.login(name, password);
+    // }
 
     @RequestMapping("/logout")
-    public Msg logout(){
+    public Msg logout() {
         Boolean status = SessionUtil.removeSession();
 
-        if(status){
+        if (status) {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGOUT_SUCCESS_MSG);
         }
         return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.LOGOUT_ERR_MSG);
@@ -88,21 +91,19 @@ public class UserController {
             data.remove(Constant.PASSWORD);
 
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.REGISTER_SUCCESS_MSG, data);
-        }
-        else {
+        } else {
             return MsgUtil.makeMsg(MsgCode.DUPLICATE_USER_ERROR);
         }
 
     }
 
     @RequestMapping("/checkSession")
-    public Msg checkSession(){
+    public Msg checkSession() {
         JSONObject auth = SessionUtil.getAuth();
 
-        if(auth == null){
+        if (auth == null) {
             return MsgUtil.makeMsg(MsgCode.NOT_LOGGED_IN_ERROR);
-        }
-        else{
+        } else {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
@@ -111,7 +112,7 @@ public class UserController {
     public User getUserInfo(@RequestBody Map<String, String> params) {
         String name = params.get(Constant.NAME);
         JSONObject auth = SessionUtil.getAuth();
-        if(name.equals(auth.getString(Constant.NAME))){
+        if (name.equals(auth.getString(Constant.NAME))) {
             User user = userService.findByName(name);
             user.setPassword(null);
             return user;
@@ -120,14 +121,13 @@ public class UserController {
     }
 
     @RequestMapping("/changeUserStatus")
-    public boolean changeUserStatus(@RequestBody Map<String, String> params){
+    public boolean changeUserStatus(@RequestBody Map<String, String> params) {
         Integer u_id = Integer.parseInt(params.get("u_id"));
         Integer status = Integer.parseInt(params.get("status"));
         User user = userService.findById(u_id);
-        if(user.getType() == 1){
+        if (user.getType() == 1) {
             return false;
-        }
-        else{
+        } else {
             user.setIs_banned(status);
             return true;
         }
