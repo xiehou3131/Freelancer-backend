@@ -56,6 +56,20 @@ public class WorkDaoImpl implements WorkDao {
     }
 
     @Override
+    public Work findByDetails(Integer wId, String keyword, Double paymentHigher, Double paymentLower) {
+        Work work = workRepository.findByDetails(wId, keyword, paymentHigher, paymentLower);
+        Optional<WorkEnclosure> workEnclosure = workEnclosureRepository.findById(wId);
+        if (workEnclosure.isPresent()) {
+            work.setDescription(workEnclosure.get().getDescription());
+        }
+        else {
+            work.setDescription(null);
+            System.out.println("It's Null" + wId);
+        }
+        return work;
+    }
+
+    @Override
     public void save(Work work) {
         WorkEnclosure workEnclosure = new WorkEnclosure(work.getW_id(), work.getDescription());
         workRepository.save(work);
@@ -63,8 +77,8 @@ public class WorkDaoImpl implements WorkDao {
     }
 
     @Override
-    public Page<Work> getWorks(Pageable pageable) {
-        Page<Work> works = workRepository.getWorks(pageable);
+    public Page<Work> getWorks(Pageable pageable, String keyword, Double paymentHigher, Double paymentLower) {
+        Page<Work> works = workRepository.getWorks(keyword, paymentHigher, paymentLower, pageable);
         for (Work work : works) {
             Optional<WorkEnclosure> workEnclosure = workEnclosureRepository.findById(work.getW_id());
             if (workEnclosure.isPresent()) {
@@ -79,8 +93,8 @@ public class WorkDaoImpl implements WorkDao {
     }
 
     @Override
-    public Page<Work> getPostedWorks(Integer uId, Pageable pageable) {
-        Page<Work> postedWorks = workRepository.getPostedWorks(uId, pageable);
+    public Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher, Double paymentLower) {
+        Page<Work> postedWorks = workRepository.getPostedWorks(uId, keyword, paymentHigher, paymentLower, pageable);
         for (Work work : postedWorks) {
             Optional<WorkEnclosure> workEnclosure = workEnclosureRepository.findById(work.getW_id());
             if (workEnclosure.isPresent()) {
