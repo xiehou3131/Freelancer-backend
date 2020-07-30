@@ -43,7 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Integer uId) {
-        return userDao.findById(uId);
+        User user =  userDao.findById(uId);
+        user.setPassword(null);
+        return user;
     }
 
     @Override
@@ -74,4 +76,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean changeUserStatus(Integer u_id, Integer status) {
+        User user = userDao.findById(u_id);
+        user.setIs_banned(status);
+        userDao.save(user);
+        return true;
+    }
 }

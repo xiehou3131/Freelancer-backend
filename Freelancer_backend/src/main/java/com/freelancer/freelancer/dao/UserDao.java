@@ -16,4 +16,6 @@ public interface UserDao {
 
     User findById(Integer uId);
 
+    void save(User user);
+
 }
