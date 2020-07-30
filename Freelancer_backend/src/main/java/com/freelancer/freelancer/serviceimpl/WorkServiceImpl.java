@@ -40,7 +40,7 @@ public class WorkServiceImpl implements WorkService {
     @Override
     public boolean changeWorkStatus(Integer u_id, Integer w_id, Integer status) {
         Work work = workDao.findByWId(w_id);
-        if (u_id != work.getUId()) {
+        if (u_id != work.getU_id()) {
             return false;
         } else {
             work.setStatus(status);
