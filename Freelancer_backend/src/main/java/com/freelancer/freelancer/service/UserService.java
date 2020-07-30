@@ -7,7 +7,6 @@ import com.freelancer.freelancer.utils.msgutils.MsgUtil;
 
 import java.util.List;
 
-
 public interface UserService {
 
     User checkUser(String name, String password);

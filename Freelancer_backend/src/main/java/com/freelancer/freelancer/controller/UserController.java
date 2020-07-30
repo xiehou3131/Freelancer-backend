@@ -36,18 +36,6 @@ public class UserController {
     @Autowired
     private AdministratorService administratorService;
 
-    // @ApiOperation("login")
-    // @RequestMapping("/login")
-    // // public Msg login(@RequestParam(Constant.USERNAME) String username,
-    // // @RequestParam(Constant.PASSWORD) String password,
-    // // @RequestParam(Constant.REMEMBER_ME) Boolean remember){
-    // public Msg login(@RequestBody Map<String, String> params) {
-    // System.out.println("in login");
-    // String name = params.get(Constant.NAME);
-    // String password = params.get(Constant.PASSWORD);
-    // return userService.login(name, password);
-    // }
-
     @RequestMapping("/logout")
     public Msg logout() {
         Boolean status = SessionUtil.removeSession();
@@ -127,7 +115,7 @@ public class UserController {
         JSONObject auth = SessionUtil.getAuth();
         Integer u_id_session = Integer.parseInt(auth.getString(Constant.USER_ID));
         User user = userService.findById(u_id_session);
-        if(user == null){
+        if (user == null) {
             return false;
         }
         User user_ee = userService.findById(u_id);

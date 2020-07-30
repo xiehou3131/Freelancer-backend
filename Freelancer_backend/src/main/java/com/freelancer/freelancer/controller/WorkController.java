@@ -122,17 +122,35 @@ public class WorkController {
         workService.save(work);
     }
 
+
+    // 0 latest, 1 earliest
+
     @RequestMapping("/getWorks")
     public List<Work> getWorks(@RequestBody Map<String, Integer> params) {
         System.out.println("test");
-        Integer PageNum = params.get("pagenum");
-        Integer PageContentNum = params.get("size");
+        Integer PageNum = Integer.parseInt(params.get("pagenum"));
+        Integer PageContentNum = Integer.parseInt(params.get("size"));
+        String keyword = params.get("keyword");
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
         }
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
-        return workService.getWorks(pageable).getContent();
+
+        if (sortby == 1) {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+            return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
+        } else {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+            return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
     }
 
     @RequestMapping("/getPostedWorks")
@@ -144,10 +162,23 @@ public class WorkController {
             PageNum = 1;
             PageContentNum = 20;
         }
+        String keyword = params.get("keyword");
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
-
-        return workService.getPostedWorks(uId, pageable).getContent();
+        if (sortby == 1) {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+            return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
+        } else {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+            return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
     }
 
     @RequestMapping("/getFinishedWorks")
@@ -159,8 +190,23 @@ public class WorkController {
             PageNum = 1;
             PageContentNum = 20;
         }
+        String keyword = params.get("keyword");
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+        Pageable pageable;
+
+        if (sortby == 1) {
+            pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+        } else {
+            pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+        }
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
         List<Work> workerWorks = new ArrayList<Work>();
@@ -180,6 +226,16 @@ public class WorkController {
         JSONObject auth = SessionUtil.getAuth();
         Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
         return workService.changeWorkStatus(u_id, w_id, status);
+    }
+
+    @RequestMapping("/applyWork")
+    public void applyWork(@RequestBody Map<String, String> params) {
+        ProposeWork proposeWork = new ProposeWork();
+        proposeWork.setUId(Integer.parseInt(params.get("u_id")));
+        proposeWork.setWId(Integer.parseInt(params.get("w_id")));
+        proposeWork.setExpectPayment(Double.parseDouble(params.get("expect_payment")));
+        proposeWork.setRemark(params.get("remark"));
+        proposeWorkService.addProposeWork(proposeWork);
     }
 
     @RequestMapping("/cancelApply")
