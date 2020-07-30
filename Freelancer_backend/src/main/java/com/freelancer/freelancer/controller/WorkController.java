@@ -1,5 +1,6 @@
 package com.freelancer.freelancer.controller;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.*;
 import com.freelancer.freelancer.service.*;
@@ -122,53 +123,87 @@ public class WorkController {
         work.setFinishDdl(finishDdl);
         workService.save(work);
     }
-
+// 0 latest, 1 earliest
     @RequestMapping("/getWorks")
-    public List<Work> getWorks(@RequestBody Map<String, Integer> params) {
+    public List<Work> getWorks(@RequestBody Map<String, String> params) {
         System.out.println("test");
-        Integer PageNum = params.get("pagenum");
-        Integer PageContentNum = params.get("size");
+        Integer PageNum = Integer.parseInt(params.get("pagenum"));
+        Integer PageContentNum = Integer.parseInt(params.get("size"));
+        String keyword = params.get("keyword");
+        if (keyword == null) keyword = "";
+        Integer sortby = Integer.parseInt(params.get("sortby"));
+        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
+        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
+
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
         }
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
-        return workService.getWorks(pageable).getContent();
+        if (sortby == 1) {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+            return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
+        else {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+            return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
     }
 
     @RequestMapping("/getPostedWorks")
-    public List<Work> getPostedWorks(@RequestBody Map<String, Integer> params) {
-        Integer PageNum = params.get("pagenum");
-        Integer PageContentNum = params.get("size");
-        Integer uId = params.get("u_id");
+    public List<Work> getPostedWorks(@RequestBody Map<String, String> params) {
+        Integer PageNum = Integer.parseInt(params.get("pagenum"));
+        Integer PageContentNum = Integer.parseInt(params.get("size"));
+        Integer uId = Integer.parseInt(params.get("u_id"));
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
         }
+        String keyword = params.get("keyword");
+        if (keyword == null) keyword = "";
+        Integer sortby = Integer.parseInt(params.get("sortby"));
+        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
+        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
-
-        return workService.getPostedWorks(uId, pageable).getContent();
+        if (sortby == 1) {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+            return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
+        else {
+            Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+            return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
+        }
     }
 
     @RequestMapping("/getFinishedWorks")
-    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
-        Integer PageNum = params.get("pagenum");
-        Integer PageContentNum = params.get("size");
-        Integer uId = params.get("u_id");
+    public List<Work> getFinishedWorks(@RequestBody Map<String, String> params) {
+        Integer PageNum = Integer.parseInt(params.get("pagenum"));
+        Integer PageContentNum = Integer.parseInt(params.get("size"));
+        Integer uId = Integer.parseInt(params.get("u_id"));
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
         }
+        String keyword = params.get("keyword");
+        if (keyword == null) keyword = "";
+        Integer sortby = Integer.parseInt(params.get("sortby"));
+        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
+        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
 
-        Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+        Pageable pageable;
+
+        if (sortby == 1) {
+            pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
+        }
+        else {
+            pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
+        }
 
         List<DoWork> finishedWorks = doWorkService.getWorkerWorks(uId, pageable).getContent();
         List<Work> workerWorks = new ArrayList<Work>();
         ;
         for (DoWork doWork : finishedWorks) {
-            workerWorks.add(workService.findByWId(doWork.getW_id()));
+            workerWorks.add(workService.findByDetails(doWork.getW_id(), keyword, paymentHigher, paymentLower));
         }
         return workerWorks;
     }
@@ -188,6 +223,16 @@ public class WorkController {
             work.setStatus(status);
             return true;
         }
+    }
+
+    @RequestMapping("/applyWork")
+    public void applyWork(@RequestBody Map<String, String> params) {
+        ProposeWork proposeWork = new ProposeWork();
+        proposeWork.setUId(Integer.parseInt(params.get("u_id")));
+        proposeWork.setWId(Integer.parseInt(params.get("w_id")));
+        proposeWork.setExpectPayment(Double.parseDouble(params.get("expect_payment")));
+        proposeWork.setRemark(params.get("remark"));
+        proposeWorkService.addProposeWork(proposeWork);
     }
 
     @RequestMapping("/cancelApply")
