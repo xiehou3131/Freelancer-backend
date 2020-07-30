@@ -18,18 +18,13 @@ public class Work {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int w_id;
-    private int u_id;
+    private int uId;
     private String title;
     private Double paymentLower;
     private Double paymentHigher;
     private Timestamp biddingDdl;
     private Timestamp finishDdl;
-    private int status;
-
-    @Transient
     private String description;
-    public String getDescription() { return description; }
-
-    public void setDescription(String description) { this.description = description; }
+    private int status;
 
 }
