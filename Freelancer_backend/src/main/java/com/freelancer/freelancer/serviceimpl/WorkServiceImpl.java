@@ -29,19 +29,12 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public Work findByDetails(Integer wId, String keyword, Double paymentHigher, Double paymentLower) {
-        return workDao.findByDetails(wId, keyword, paymentHigher, paymentLower);
-    }
-
-    @Override
     public void save(Work work) {
         workDao.save(work);
     }
 
     @Override
-    public Page<Work> getWorks(Pageable pageable, String keyword, Double paymentHigher, Double paymentLower) {
-        return workDao.getWorks(pageable, keyword, paymentHigher, paymentLower);
-    }
+    public Page<Work> getWorks(Pageable pageable) { return workDao.getWorks(pageable); }
 
     @Override
     public Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher,

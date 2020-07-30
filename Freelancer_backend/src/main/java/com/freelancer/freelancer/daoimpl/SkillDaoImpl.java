@@ -15,7 +15,7 @@ public class SkillDaoImpl implements SkillDao {
     SkillRepository skillRepository;
 
     @Override
-    public Skill findById(Integer sId) { return skillRepository.findById(sId).get(); }
+    public Skill findById(Integer sId) { return skillRepository.getOne(sId); }
 
     @Override
     public Skill checkDuplicate(String skillName) { return skillRepository.checkDuplicate(skillName); }

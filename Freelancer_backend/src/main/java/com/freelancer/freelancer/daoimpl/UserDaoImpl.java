@@ -2,13 +2,11 @@ package com.freelancer.freelancer.daoimpl;
 
 import com.freelancer.freelancer.dao.UserDao;
 import com.freelancer.freelancer.entity.User;
-import com.freelancer.freelancer.entity.UserAvatar;
-import com.freelancer.freelancer.entity.WorkEnclosure;
-import com.freelancer.freelancer.repository.UserAvatarRepository;
 import com.freelancer.freelancer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -18,9 +16,6 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    UserAvatarRepository userAvatarRepository;
 
     @Override
     public User checkUser(String name, String password) {
@@ -34,8 +29,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(User newUser) {
-        UserAvatar userAvatar = new UserAvatar(newUser.getU_id(), newUser.getAvatar());
-        userAvatarRepository.save(userAvatar);
         userRepository.save(newUser);
     }
 

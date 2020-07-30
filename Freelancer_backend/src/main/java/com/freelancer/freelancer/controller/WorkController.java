@@ -1,6 +1,5 @@
 package com.freelancer.freelancer.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.freelancer.freelancer.constant.Constant;
 import com.freelancer.freelancer.entity.*;
 import com.freelancer.freelancer.service.*;
@@ -76,7 +75,6 @@ public class WorkController {
         Work work = workService.findByWId(wId);
         JSONObject workJson = JSONObject.fromObject(work);
         User postman = userService.findById(work.getU_id());
-        postman.setPassword(null);
         JSONObject userJson = JSONObject.fromObject(postman);
 
         List<Integer> necessarySkillList = needSkillService.getNecessarySkillListByWId(wId);
@@ -124,9 +122,11 @@ public class WorkController {
         workService.save(work);
     }
 
+
     // 0 latest, 1 earliest
+
     @RequestMapping("/getWorks")
-    public List<Work> getWorks(@RequestBody Map<String, String> params) {
+    public List<Work> getWorks(@RequestBody Map<String, Integer> params) {
         System.out.println("test");
         Integer PageNum = Integer.parseInt(params.get("pagenum"));
         Integer PageContentNum = Integer.parseInt(params.get("size"));
@@ -139,7 +139,6 @@ public class WorkController {
         String lower = params.get("paymentLower");
         Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
         Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
-
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
@@ -155,10 +154,10 @@ public class WorkController {
     }
 
     @RequestMapping("/getPostedWorks")
-    public List<Work> getPostedWorks(@RequestBody Map<String, String> params) {
-        Integer PageNum = Integer.parseInt(params.get("pagenum"));
-        Integer PageContentNum = Integer.parseInt(params.get("size"));
-        Integer uId = Integer.parseInt(params.get("u_id"));
+    public List<Work> getPostedWorks(@RequestBody Map<String, Integer> params) {
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
+        Integer uId = params.get("u_id");
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
@@ -183,10 +182,10 @@ public class WorkController {
     }
 
     @RequestMapping("/getFinishedWorks")
-    public List<Work> getFinishedWorks(@RequestBody Map<String, String> params) {
-        Integer PageNum = Integer.parseInt(params.get("pagenum"));
-        Integer PageContentNum = Integer.parseInt(params.get("size"));
-        Integer uId = Integer.parseInt(params.get("u_id"));
+    public List<Work> getFinishedWorks(@RequestBody Map<String, Integer> params) {
+        Integer PageNum = params.get("pagenum");
+        Integer PageContentNum = params.get("size");
+        Integer uId = params.get("u_id");
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
             PageContentNum = 20;
@@ -213,7 +212,7 @@ public class WorkController {
         List<Work> workerWorks = new ArrayList<Work>();
         ;
         for (DoWork doWork : finishedWorks) {
-            workerWorks.add(workService.findByDetails(doWork.getW_id(), keyword, paymentHigher, paymentLower));
+            workerWorks.add(workService.findByWId(doWork.getW_id()));
         }
         return workerWorks;
     }

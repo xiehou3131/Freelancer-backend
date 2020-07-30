@@ -15,10 +15,10 @@ import javax.persistence.*;
 public class ProposeWork {
 
     @Id
-    private int uId;
+    private int u_id;
 
     @Id
-    private int wId;
+    private int w_id;
 
     private Double expectPayment;
     private String remark;

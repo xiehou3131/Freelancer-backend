@@ -11,12 +11,10 @@ public interface WorkDao {
 
     Work findByWId(Integer wId);
 
-    Work findByDetails(Integer wId, String keyword, Double paymentHigher, Double paymentLower);
-
     void save(Work work);
 
-    Page<Work> getWorks(Pageable pageable, String keyword, Double paymentHigher, Double paymentLower);
+    Page<Work> getWorks(Pageable pageable);
 
-    Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher, Double paymentLower);
+    Page<Work> getPostedWorks(Integer uId, Pageable pageable);
 
 }
