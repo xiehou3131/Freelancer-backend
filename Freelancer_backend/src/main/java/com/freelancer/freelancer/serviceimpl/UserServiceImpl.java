@@ -31,10 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User checkDuplicate(String name) { return userDao.checkDuplicate(name); }
+    public User checkDuplicate(String name) {
+        return userDao.checkDuplicate(name);
+    }
 
     @Override
-    public void addUser(User newUser) { userDao.addUser(newUser); }
+    public void addUser(User newUser) {
+        userDao.addUser(newUser);
+    }
 
     @Override
     public User findByName(String name) {
@@ -43,7 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Integer uId) {
-        return userDao.findById(uId);
+        User user = userDao.findById(uId);
+        user.setPassword(null);
+        return user;
     }
 
     @Override
@@ -52,7 +58,7 @@ public class UserServiceImpl implements UserService {
             return MsgUtil.makeMsg(MsgCode.NOT_ENTERING_ANYTHING);
         }
         User user = userDao.checkUser(name, password);
-        if(user != null){
+        if (user != null) {
             JSONObject data = new JSONObject();
             data.put(Constant.NAME, user.getName());
             data.put(Constant.USER_TYPE, user.getType());
@@ -61,17 +67,24 @@ public class UserServiceImpl implements UserService {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         }
         Administrator administrator = administratorDao.checkAdmin(name, password);
-        if(administrator != null) {
+        if (administrator != null) {
             JSONObject data = new JSONObject();
             data.put(Constant.NAME, administrator.getName());
             data.put(Constant.USER_TYPE, 1);
             SessionUtil.setSession(data);
 
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-        else{
+        } else {
             return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR);
         }
+    }
+
+    @Override
+    public boolean changeUserStatus(Integer u_id, Integer status) {
+        User user = userDao.findById(u_id);
+        user.setIs_banned(status);
+        userDao.save(user);
+        return true;
     }
 
 }

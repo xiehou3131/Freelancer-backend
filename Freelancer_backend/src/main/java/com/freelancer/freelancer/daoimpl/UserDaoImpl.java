@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 @Repository
 public class UserDaoImpl implements UserDao {
 
@@ -43,8 +45,7 @@ public class UserDaoImpl implements UserDao {
         Optional<UserAvatar> userAvatar = userAvatarRepository.findById(user.getU_id());
         if (userAvatar.isPresent()) {
             user.setAvatar(userAvatar.get().getAvator());
-        }
-        else {
+        } else {
             user.setAvatar(null);
         }
         return user;
@@ -56,11 +57,16 @@ public class UserDaoImpl implements UserDao {
         Optional<UserAvatar> userAvatar = userAvatarRepository.findById(user.getU_id());
         if (userAvatar.isPresent()) {
             user.setAvatar(userAvatar.get().getAvator());
-        }
-        else {
+        } else {
             user.setAvatar(null);
         }
         return user;
+    }
+
+    @Transactional
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
     }
 
 }

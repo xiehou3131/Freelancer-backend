@@ -24,7 +24,9 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public Work findByWId(Integer wId) { return workDao.findByWId(wId); }
+    public Work findByWId(Integer wId) {
+        return workDao.findByWId(wId);
+    }
 
     @Override
     public Work findByDetails(Integer wId, String keyword, Double paymentHigher, Double paymentLower) {
@@ -42,8 +44,20 @@ public class WorkServiceImpl implements WorkService {
     }
 
     @Override
-    public Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher, Double paymentLower) {
+    public Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher,
+            Double paymentLower) {
         return workDao.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower);
     }
 
+    @Override
+    public boolean changeWorkStatus(Integer u_id, Integer w_id, Integer status) {
+        Work work = workDao.findByWId(w_id);
+        if (u_id != work.getU_id()) {
+            return false;
+        } else {
+            work.setStatus(status);
+            workDao.save(work);
+            return true;
+        }
+    }
 }

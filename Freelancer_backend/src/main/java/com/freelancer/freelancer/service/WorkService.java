@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-
 public interface WorkService {
 
     List<Work> findByTitle(String title);
@@ -20,6 +19,8 @@ public interface WorkService {
 
     Page<Work> getWorks(Pageable pageable, String keyword, Double paymentHigher, Double paymentLower);
 
-    Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher, Double paymentLower);
+    Page<Work> getPostedWorks(Integer uId, Pageable pageable, String keyword, Double paymentHigher,
+            Double paymentLower);
 
+    boolean changeWorkStatus(Integer u_id, Integer w_id, Integer status);
 }

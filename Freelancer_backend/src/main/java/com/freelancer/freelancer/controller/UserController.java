@@ -36,18 +36,6 @@ public class UserController {
     @Autowired
     private AdministratorService administratorService;
 
-    // @ApiOperation("login")
-    // @RequestMapping("/login")
-    // // public Msg login(@RequestParam(Constant.USERNAME) String username,
-    // // @RequestParam(Constant.PASSWORD) String password,
-    // // @RequestParam(Constant.REMEMBER_ME) Boolean remember){
-    // public Msg login(@RequestBody Map<String, String> params) {
-    // System.out.println("in login");
-    // String name = params.get(Constant.NAME);
-    // String password = params.get(Constant.PASSWORD);
-    // return userService.login(name, password);
-    // }
-
     @RequestMapping("/logout")
     public Msg logout() {
         Boolean status = SessionUtil.removeSession();
@@ -124,13 +112,17 @@ public class UserController {
     public boolean changeUserStatus(@RequestBody Map<String, String> params) {
         Integer u_id = Integer.parseInt(params.get("u_id"));
         Integer status = Integer.parseInt(params.get("status"));
-        User user = userService.findById(u_id);
-        if (user.getType() == 1) {
+        JSONObject auth = SessionUtil.getAuth();
+        Integer u_id_session = Integer.parseInt(auth.getString(Constant.USER_ID));
+        User user = userService.findById(u_id_session);
+        if (user == null) {
             return false;
-        } else {
-            user.setIs_banned(status);
-            return true;
         }
+        User user_ee = userService.findById(u_id);
+        if (user.getType() != 1 || user_ee.getType() == 1) {
+            return false;
+        }
+        return userService.changeUserStatus(u_id, status);
     }
 
 }

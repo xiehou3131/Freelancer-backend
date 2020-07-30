@@ -123,17 +123,22 @@ public class WorkController {
         work.setFinishDdl(finishDdl);
         workService.save(work);
     }
-// 0 latest, 1 earliest
+
+    // 0 latest, 1 earliest
     @RequestMapping("/getWorks")
     public List<Work> getWorks(@RequestBody Map<String, String> params) {
         System.out.println("test");
         Integer PageNum = Integer.parseInt(params.get("pagenum"));
         Integer PageContentNum = Integer.parseInt(params.get("size"));
         String keyword = params.get("keyword");
-        if (keyword == null) keyword = "";
-        Integer sortby = Integer.parseInt(params.get("sortby"));
-        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
-        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
 
         if (PageNum <= 0 || PageContentNum <= 0) {
             PageNum = 1;
@@ -143,8 +148,7 @@ public class WorkController {
         if (sortby == 1) {
             Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
             return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
-        }
-        else {
+        } else {
             Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
             return workService.getWorks(pageable, keyword, paymentHigher, paymentLower).getContent();
         }
@@ -160,16 +164,19 @@ public class WorkController {
             PageContentNum = 20;
         }
         String keyword = params.get("keyword");
-        if (keyword == null) keyword = "";
-        Integer sortby = Integer.parseInt(params.get("sortby"));
-        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
-        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
 
         if (sortby == 1) {
             Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
             return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
-        }
-        else {
+        } else {
             Pageable pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
             return workService.getPostedWorks(uId, pageable, keyword, paymentHigher, paymentLower).getContent();
         }
@@ -185,17 +192,20 @@ public class WorkController {
             PageContentNum = 20;
         }
         String keyword = params.get("keyword");
-        if (keyword == null) keyword = "";
-        Integer sortby = Integer.parseInt(params.get("sortby"));
-        Double paymentHigher = Double.parseDouble(params.get("paymentHigher"));
-        Double paymentLower = Double.parseDouble(params.get("paymentLower"));
+        if (keyword == null)
+            keyword = "";
+        String sort = params.get("sortby");
+        Integer sortby = sort != null ? Integer.parseInt(sort) : 0;
+        String higher = params.get("paymentHigher");
+        String lower = params.get("paymentLower");
+        Double paymentHigher = higher != null ? Double.parseDouble(higher) : 10000;
+        Double paymentLower = lower != null ? Double.parseDouble(lower) : 0;
 
         Pageable pageable;
 
         if (sortby == 1) {
             pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.ASC, "w_id"));
-        }
-        else {
+        } else {
             pageable = PageRequest.of(PageNum - 1, PageContentNum, Sort.by(Sort.Direction.DESC, "w_id"));
         }
 
@@ -216,13 +226,7 @@ public class WorkController {
 
         JSONObject auth = SessionUtil.getAuth();
         Integer u_id = Integer.parseInt(auth.getString(Constant.USER_ID));
-        Work work = workService.findByWId(w_id);
-        if (u_id != work.getU_id()) {
-            return false;
-        } else {
-            work.setStatus(status);
-            return true;
-        }
+        return workService.changeWorkStatus(u_id, w_id, status);
     }
 
     @RequestMapping("/applyWork")
