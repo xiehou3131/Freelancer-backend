@@ -22,4 +22,6 @@ public interface UserService {
 
     Msg login(String name, String password);
 
+    boolean changeUserStatus(Integer u_id, Integer status);
+
 }
