@@ -15,7 +15,6 @@ public class SkillDaoImpl implements SkillDao {
     SkillRepository skillRepository;
 
     @Override
-
     public Skill findById(Integer sId) { return skillRepository.findById(sId).get(); }
 
     @Override
